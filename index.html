@@ -3,219 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>Frontal Dashboard - 予算実績レポート</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<title>フロンタル 予算実績ダッシュボード</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; }
-.container { max-width: 1100px; margin: 0 auto; padding: 16px; }
-header { background: linear-gradient(135deg, #1a237e, #283593); color: white; padding: 24px 0; margin-bottom: 24px; }
-header h1 { font-size: 22px; font-weight: 600; }
-header .subtitle { font-size: 13px; opacity: 0.8; margin-top: 4px; }
-.gauge-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.gauge-card { background: white; border-radius: 12px; padding: 20px 16px 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); text-align: center; }
-.gauge-card .gauge-title { font-size: 13px; font-weight: 600; color: #555; margin-bottom: 8px; }
-.gauge-canvas-wrap { position: relative; width: 180px; height: 110px; margin: 0 auto; }
-.gauge-canvas-wrap canvas { width: 180px !important; height: 110px !important; }
-.gauge-value { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); font-size: 22px; font-weight: 800; }
-.gauge-sub { font-size: 11px; color: #888; margin-top: 6px; }
-.section { background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-.section h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; }
-.chart-container { position: relative; height: 280px; }
-.chart-container.horizontal { height: 200px; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid #eee; }
-th { background: #fafafa; font-weight: 600; font-size: 12px; color: #666; }
-th:first-child, td:first-child { text-align: left; }
-.badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
-.badge-green { background: #e8f5e9; color: #2e7d32; }
-.badge-red { background: #ffebee; color: #c62828; }
-.badge-yellow { background: #fff8e1; color: #f57f17; }
-footer { text-align: center; color: #999; font-size: 11px; padding: 20px; }
-@media (max-width: 700px) {
-  .container { padding: 10px; }
-  .grid-2 { grid-template-columns: 1fr; }
-  .chart-container { height: 220px; }
-  .chart-container.horizontal { height: 180px; }
-  table { font-size: 11px; }
-  th, td { padding: 6px 4px; }
-}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; background: #fff; color: #333; line-height: 1.6; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+  .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .card { background: #fafafa; border: 1px solid #e8e8e8; border-radius: 8px; padding: 16px; }
+  .card-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+  .card-value { font-size: 24px; font-weight: 700; }
+  .card-sub { font-size: 12px; color: #888; margin-top: 4px; }
+  .rate-good { color: #16a34a; }
+  .rate-warn { color: #d97706; }
+  .rate-bad { color: #dc2626; }
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #333; }
+  .chart-wrap { position: relative; width: 100%; max-width: 100%; margin-bottom: 16px; }
+  canvas { width: 100% !important; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
+  th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid #e8e8e8; }
+  th { background: #f5f5f5; font-weight: 600; font-size: 12px; color: #666; }
+  td:first-child, th:first-child { text-align: left; }
+  .highlight { background: #fffbeb; }
+  .note { font-size: 11px; color: #aaa; margin-top: 8px; }
+  @media (max-width: 640px) {
+    .container { padding: 12px; }
+    h1 { font-size: 18px; }
+    .card-value { font-size: 20px; }
+    table { font-size: 11px; }
+    th, td { padding: 6px 4px; }
+  }
 </style>
 </head>
 <body>
-<header>
 <div class="container">
-<h1>Frontal 予算実績ダッシュボード</h1>
-<div class="subtitle">2026年度 Q1（1月〜3月） | 最終更新: 2026-03-28</div>
+  <h1>フロンタル 予算実績ダッシュボード</h1>
+  <div class="subtitle" id="updateTime"></div>
+  <div class="summary-cards" id="summaryCards"></div>
+  <div class="section">
+    <div class="section-title">一般売上</div>
+    <div class="chart-wrap"><canvas id="chartGeneral" height="260"></canvas></div>
+    <table id="tableGeneral"></table>
+  </div>
+  <div class="section">
+    <div class="section-title">利用売上</div>
+    <div class="chart-wrap"><canvas id="chartUsage" height="260"></canvas></div>
+    <table id="tableUsage"></table>
+  </div>
+  <div class="section">
+    <div class="section-title">外注費</div>
+    <div class="chart-wrap"><canvas id="chartOutsource" height="260"></canvas></div>
+    <table id="tableOutsource"></table>
+  </div>
+  <div class="section">
+    <div class="section-title">累計進捗（1月〜3月）</div>
+    <table id="tableCumulative"></table>
+  </div>
+  <div class="note">※ 3月は26日時点の実績（月末まで未確定）。データソース: DriveDoor日報 / 車両経費一覧（2026/3/26取得分をフォールバック使用）</div>
 </div>
-</header>
-<div class="container">
-
-<!-- ===== スピードメーター ===== -->
-<div class="gauge-row">
-<div class="gauge-card">
-<div class="gauge-title">Q1 一般売上</div>
-<div class="gauge-canvas-wrap"><canvas id="gaugeIppan"></canvas><div class="gauge-value blue" id="gvIppan"></div></div>
-<div class="gauge-sub">114,970 / 135,360 千円</div>
-</div>
-<div class="gauge-card">
-<div class="gauge-title">Q1 利用貨物売上</div>
-<div class="gauge-canvas-wrap"><canvas id="gaugeRiyo"></canvas><div class="gauge-value green" id="gvRiyo"></div></div>
-<div class="gauge-sub">43,712 / 53,500 千円</div>
-</div>
-</div>
-
-<!-- ===== 売上グラフ（縦棒: 予算左・実績右） ===== -->
-<div class="grid-2">
-<div class="section">
-<h2>一般売上 - 予算 vs 実績</h2>
-<div class="chart-container"><canvas id="chartIppan"></canvas></div>
-</div>
-<div class="section">
-<h2>利用貨物売上 - 予算 vs 実績</h2>
-<div class="chart-container"><canvas id="chartRiyo"></canvas></div>
-</div>
-</div>
-
-<!-- ===== 経費（横棒グラフ） ===== -->
-<div class="section">
-<h2>経費内訳 - 予算 vs 実績（横グラフ）</h2>
-<div class="chart-container horizontal"><canvas id="chartExpenses"></canvas></div>
-</div>
-
-<!-- ===== 明細テーブル ===== -->
-<div class="section">
-<h2>月別明細テーブル</h2>
-<div style="overflow-x:auto;">
-<table>
-<thead>
-<tr>
-<th>月</th>
-<th>一般売上<br>予算</th><th>一般売上<br>実績</th><th>達成率</th>
-<th>利用貨物売上<br>予算</th><th>利用貨物売上<br>実績</th><th>達成率</th>
-<th>外注費<br>予算</th><th>外注費<br>実績</th><th>達成率</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1月</td>
-<td>40,260</td><td>42,569</td><td><span class="badge badge-green">105.7%</span></td>
-<td>15,800</td><td>16,817</td><td><span class="badge badge-green">106.4%</span></td>
-<td>16,000</td><td>16,323</td><td><span class="badge badge-yellow">102.0%</span></td>
-</tr>
-<tr>
-<td>2月</td>
-<td>41,100</td><td>43,081</td><td><span class="badge badge-green">104.8%</span></td>
-<td>19,500</td><td>20,562</td><td><span class="badge badge-green">105.4%</span></td>
-<td>19,000</td><td>19,605</td><td><span class="badge badge-yellow">103.2%</span></td>
-</tr>
-<tr>
-<td>3月</td>
-<td>54,000</td><td>29,320</td><td><span class="badge badge-red">54.3%</span></td>
-<td>18,200</td><td>6,333</td><td><span class="badge badge-red">34.8%</span></td>
-<td>15,000</td><td>9,286</td><td><span class="badge badge-green">61.9%</span></td>
-</tr>
-</tbody>
-<tfoot style="font-weight:700; background:#f5f5f5;">
-<tr>
-<td>Q1累計</td>
-<td>135,360</td><td>114,970</td><td><span class="badge badge-yellow">84.9%</span></td>
-<td>53,500</td><td>43,712</td><td><span class="badge badge-yellow">81.7%</span></td>
-<td>50,000</td><td>45,214</td><td><span class="badge badge-yellow">90.4%</span></td>
-</tr>
-</tfoot>
-</table>
-</div>
-</div>
-
-</div>
-<footer>Frontal Dashboard &copy; 2026 | Auto-generated report</footer>
-
 <script>
-/* ========== スピードメーター ========== */
-function drawGauge(canvasId, valueId, pct, color) {
-  const clamped = Math.min(pct, 120);
-  const ratio = clamped / 120;
-  const bg = 'rgba(0,0,0,0.06)';
-  const ctx = document.getElementById(canvasId).getContext('2d');
-  const W = 180, H = 110, cx = W/2, cy = H - 8, r = 72;
-  ctx.canvas.width = W; ctx.canvas.height = H;
-
-  // background arc
-  ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, 2*Math.PI); ctx.lineWidth = 18; ctx.strokeStyle = bg; ctx.lineCap = 'round'; ctx.stroke();
-  // value arc
-  const endAngle = Math.PI + ratio * Math.PI;
-  ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, endAngle); ctx.lineWidth = 18; ctx.strokeStyle = color; ctx.lineCap = 'round'; ctx.stroke();
-  // tick marks
-  for (let i = 0; i <= 12; i++) {
-    const a = Math.PI + (i/12)*Math.PI;
-    const x1 = cx + Math.cos(a)*(r+14), y1 = cy + Math.sin(a)*(r+14);
-    const x2 = cx + Math.cos(a)*(r+8), y2 = cy + Math.sin(a)*(r+8);
-    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.lineWidth = 1; ctx.strokeStyle = '#ccc'; ctx.stroke();
-  }
-  // needle
-  const na = Math.PI + ratio * Math.PI;
-  const nx = cx + Math.cos(na)*(r-8), ny = cy + Math.sin(na)*(r-8);
-  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(nx,ny); ctx.lineWidth = 2.5; ctx.strokeStyle = '#333'; ctx.lineCap = 'round'; ctx.stroke();
-  ctx.beginPath(); ctx.arc(cx,cy,4,0,2*Math.PI); ctx.fillStyle = '#333'; ctx.fill();
-
-  document.getElementById(valueId).textContent = pct.toFixed(1) + '%';
-  document.getElementById(valueId).style.color = color;
-}
-drawGauge('gaugeIppan','gvIppan', 84.9, '#1565c0');
-drawGauge('gaugeRiyo','gvRiyo', 81.7, '#2e7d32');
-
-/* ========== 売上 縦棒（予算=左, 実績=右） ========== */
-const months = ['1月', '2月', '3月'];
-const barOpts = () => ({
-  responsive: true, maintainAspectRatio: false,
-  plugins: { legend: { position: 'top', labels: { font: { size: 12 } } } },
-  scales: { y: { beginAtZero: true, ticks: { callback: v => v.toLocaleString() } } }
-});
-
-new Chart(document.getElementById('chartIppan'), {
-  type: 'bar',
-  data: {
-    labels: months,
-    datasets: [
-      { label: '予算', data: [40260, 41100, 54000], backgroundColor: 'rgba(21,101,192,0.2)', borderColor: 'rgba(21,101,192,0.6)', borderWidth: 1, borderRadius: 4 },
-      { label: '実績', data: [42569, 43081, 29320], backgroundColor: 'rgba(21,101,192,0.85)', borderRadius: 4 }
-    ]
-  },
-  options: barOpts()
-});
-
-new Chart(document.getElementById('chartRiyo'), {
-  type: 'bar',
-  data: {
-    labels: months,
-    datasets: [
-      { label: '予算', data: [15800, 19500, 18200], backgroundColor: 'rgba(46,125,50,0.2)', borderColor: 'rgba(46,125,50,0.6)', borderWidth: 1, borderRadius: 4 },
-      { label: '実績', data: [16817, 20562, 6333], backgroundColor: 'rgba(46,125,50,0.85)', borderRadius: 4 }
-    ]
-  },
-  options: barOpts()
-});
-
-/* ========== 経費 横棒グラフ ========== */
-new Chart(document.getElementById('chartExpenses'), {
-  type: 'bar',
-  data: {
-    labels: ['外注費', '燃料費', '人件費', '車両費'],
-    datasets: [
-      { label: '予算', data: [50000, 12000, 38000, 8500], backgroundColor: 'rgba(198,40,40,0.18)', borderColor: 'rgba(198,40,40,0.5)', borderWidth: 1, borderRadius: 4 },
-      { label: '実績', data: [45214, 10800, 35600, 7900], backgroundColor: 'rgba(198,40,40,0.8)', borderRadius: 4 }
-    ]
-  },
-  options: {
-    indexAxis: 'y',
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'top', labels: { font: { size: 12 } } } },
-    scales: { x: { beginAtZero: true, ticks: { callback: v => v.toLocaleString() + '千円' } } }
-  }
-});
+const DATA={months:['1月','2月','3月'],general:{budget:[40260,41100,54000],actual:[42569,43081,29320]},usage:{budget:[15800,19500,18200],actual:[16817,20562,6333]},outsource:{budget:[16000,19000,15000],actual:[16323,19605,9286]}};
+document.getElementById('updateTime').textContent='最終更新: 2026年3月29日（データ: 2026/3/26取得分）';
+function pct(a,b){return b?((a/b)*100).toFixed(1):'-';}
+function rateClass(r){return r>=90?'rate-good':r>=70?'rate-warn':'rate-bad';}
+function fmt(n){return n.toLocaleString();}
+(function(){var cGB=DATA.general.budget.reduce(function(s,v){return s+v;},0),cGA=DATA.general.actual.reduce(function(s,v){return s+v;},0),cUB=DATA.usage.budget.reduce(function(s,v){return s+v;},0),cUA=DATA.usage.actual.reduce(function(s,v){return s+v;},0),cOB=DATA.outsource.budget.reduce(function(s,v){return s+v;},0),cOA=DATA.outsource.actual.reduce(function(s,v){return s+v;},0),cSB=cGB+cUB,cSA=cGA+cUA,rS=(cSA/cSB*100).toFixed(1),rG=(cGA/cGB*100).toFixed(1),rU=(cUA/cUB*100).toFixed(1),rO=(cOA/cOB*100).toFixed(1);var cards=[{l:'売上合計（累計）',v:fmt(cSA)+' 千円',s:'予算 '+fmt(cSB)+' 千円　達成率 '+rS+'%',r:rS},{l:'一般売上（累計）',v:fmt(cGA)+' 千円',s:'予算 '+fmt(cGB)+' 千円　達成率 '+rG+'%',r:rG},{l:'利用売上（累計）',v:fmt(cUA)+' 千円',s:'予算 '+fmt(cUB)+' 千円　達成率 '+rU+'%',r:rU},{l:'外注費（累計）',v:fmt(cOA)+' 千円',s:'予算 '+fmt(cOB)+' 千円　執行率 '+rO+'%',r:rO}];var el=document.getElementById('summaryCards');cards.forEach(function(c){var rc=c.l.includes('外注費')?(c.r<=100?'rate-good':'rate-bad'):rateClass(c.r);el.innerHTML+='<div class="card"><div class="card-label">'+c.l+'</div><div class="card-value">'+c.v+'</div><div class="card-sub '+rc+'">'+c.s+'</div></div>';});})();
+function makeChart(id,label,budgets,actuals){new Chart(document.getElementById(id),{type:'bar',data:{labels:DATA.months,datasets:[{label:'予算',data:budgets,backgroundColor:'rgba(200,200,200,0.6)',borderColor:'#aaa',borderWidth:1},{label:'実績',data:actuals,backgroundColor:'rgba(59,130,246,0.7)',borderColor:'#3b82f6',borderWidth:1}]},options:{responsive:true,plugins:{legend:{position:'top',labels:{font:{size:12}}},tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y.toLocaleString()+' 千円';}}}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return v.toLocaleString();}},title:{display:true,text:'千円'}}}}});}
+makeChart('chartGeneral','一般売上',DATA.general.budget,DATA.general.actual);
+makeChart('chartUsage','利用売上',DATA.usage.budget,DATA.usage.actual);
+makeChart('chartOutsource','外注費',DATA.outsource.budget,DATA.outsource.actual);
+function makeTable(id,budgets,actuals,isExp){var html='<tr><th>月</th><th>予算</th><th>実績</th><th>差異</th><th>'+(isExp?'執行率':'達成率')+'</th></tr>';DATA.months.forEach(function(m,i){var diff=actuals[i]-budgets[i],r=pct(actuals[i],budgets[i]),cls=i===DATA.months.length-1?' class="highlight"':'',ds=diff>=0?'+':'',dc=isExp?(diff<=0?'rate-good':'rate-bad'):(diff>=0?'rate-good':'rate-bad');html+='<tr'+cls+'><td>'+m+'</td><td>'+fmt(budgets[i])+'</td><td>'+fmt(actuals[i])+'</td><td class="'+dc+'">'+ds+fmt(diff)+'</td><td>'+r+'%</td></tr>';});document.getElementById(id).innerHTML=html;}
+makeTable('tableGeneral',DATA.general.budget,DATA.general.actual,false);
+makeTable('tableUsage',DATA.usage.budget,DATA.usage.actual,false);
+makeTable('tableOutsource',DATA.outsource.budget,DATA.outsource.actual,true);
+(function(){var items=[{n:'一般売上',b:DATA.general.budget,a:DATA.general.actual,e:false},{n:'利用売上',b:DATA.usage.budget,a:DATA.usage.actual,e:false},{n:'売上合計',b:DATA.general.budget.map(function(v,i){return v+DATA.usage.budget[i];}),a:DATA.general.actual.map(function(v,i){return v+DATA.usage.actual[i];}),e:false},{n:'外注費',b:DATA.outsource.budget,a:DATA.outsource.actual,e:true}];var html='<tr><th>項目</th><th>予算累計</th><th>実績累計</th><th>差異</th><th>達成率/執行率</th></tr>';items.forEach(function(item){var cb=item.b.reduce(function(s,v){return s+v;},0),ca=item.a.reduce(function(s,v){return s+v;},0),diff=ca-cb,r=pct(ca,cb),ds=diff>=0?'+':'',dc=item.e?(diff<=0?'rate-good':'rate-bad'):(diff>=0?'rate-good':'rate-bad');html+='<tr><td>'+item.n+'</td><td>'+fmt(cb)+'</td><td>'+fmt(ca)+'</td><td class="'+dc+'">'+ds+fmt(diff)+'</td><td>'+r+'%</td></tr>';});document.getElementById('tableCumulative').innerHTML=html;})();
 </script>
 </body>
 </html>
