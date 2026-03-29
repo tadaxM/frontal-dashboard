@@ -3,83 +3,72 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>フロンタル 予算実績ダッシュボード</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<title>ãã­ã³ã¿ã« äºç®å®ç¸¾ããã·ã¥ãã¼ã</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; background: #fff; color: #333; line-height: 1.6; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
-  h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-  .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
-  .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 24px; }
-  .card { background: #fafafa; border: 1px solid #e8e8e8; border-radius: 8px; padding: 16px; }
-  .card-label { font-size: 12px; color: #888; margin-bottom: 4px; }
-  .card-value { font-size: 24px; font-weight: 700; }
-  .card-sub { font-size: 12px; color: #888; margin-top: 4px; }
-  .rate-good { color: #16a34a; }
-  .rate-warn { color: #d97706; }
-  .rate-bad { color: #dc2626; }
-  .section { margin-bottom: 32px; }
-  .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #333; }
-  .chart-wrap { position: relative; width: 100%; max-width: 100%; margin-bottom: 16px; }
-  canvas { width: 100% !important; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
-  th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid #e8e8e8; }
-  th { background: #f5f5f5; font-weight: 600; font-size: 12px; color: #666; }
-  td:first-child, th:first-child { text-align: left; }
-  .highlight { background: #fffbeb; }
-  .note { font-size: 11px; color: #aaa; margin-top: 8px; }
-  @media (max-width: 640px) {
-    .container { padding: 12px; }
-    h1 { font-size: 18px; }
-    .card-value { font-size: 20px; }
-    table { font-size: 11px; }
-    th, td { padding: 6px 4px; }
-  }
-</style>
-</head>
-<body>
-<div class="container">
-  <h1>フロンタル 予算実績ダッシュボード</h1>
-  <div class="subtitle" id="updateTime"></div>
-  <div class="summary-cards" id="summaryCards"></div>
-  <div class="section">
-    <div class="section-title">一般売上</div>
-    <div class="chart-wrap"><canvas id="chartGeneral" height="260"></canvas></div>
-    <table id="tableGeneral"></table>
-  </div>
-  <div class="section">
-    <div class="section-title">利用売上</div>
-    <div class="chart-wrap"><canvas id="chartUsage" height="260"></canvas></div>
-    <table id="tableUsage"></table>
-  </div>
-  <div class="section">
-    <div class="section-title">外注費</div>
-    <div class="chart-wrap"><canvas id="chartOutsource" height="260"></canvas></div>
-    <table id="tableOutsource"></table>
-  </div>
-  <div class="section">
-    <div class="section-title">累計進捗（1月〜3月）</div>
-    <table id="tableCumulative"></table>
-  </div>
-  <div class="note">※ 3月は26日時点の実績（月末まで未確定）。データソース: DriveDoor日報 / 車両経費一覧（2026/3/26取得分をフォールバック使用）</div>
-</div>
-<script>
-const DATA={months:['1月','2月','3月'],general:{budget:[40260,41100,54000],actual:[42569,43081,29320]},usage:{budget:[15800,19500,18200],actual:[16817,20562,6333]},outsource:{budget:[16000,19000,15000],actual:[16323,19605,9286]}};
-document.getElementById('updateTime').textContent='最終更新: 2026年3月29日（データ: 2026/3/26取得分）';
-function pct(a,b){return b?((a/b)*100).toFixed(1):'-';}
-function rateClass(r){return r>=90?'rate-good':r>=70?'rate-warn':'rate-bad';}
-function fmt(n){return n.toLocaleString();}
-(function(){var cGB=DATA.general.budget.reduce(function(s,v){return s+v;},0),cGA=DATA.general.actual.reduce(function(s,v){return s+v;},0),cUB=DATA.usage.budget.reduce(function(s,v){return s+v;},0),cUA=DATA.usage.actual.reduce(function(s,v){return s+v;},0),cOB=DATA.outsource.budget.reduce(function(s,v){return s+v;},0),cOA=DATA.outsource.actual.reduce(function(s,v){return s+v;},0),cSB=cGB+cUB,cSA=cGA+cUA,rS=(cSA/cSB*100).toFixed(1),rG=(cGA/cGB*100).toFixed(1),rU=(cUA/cUB*100).toFixed(1),rO=(cOA/cOB*100).toFixed(1);var cards=[{l:'売上合計（累計）',v:fmt(cSA)+' 千円',s:'予算 '+fmt(cSB)+' 千円　達成率 '+rS+'%',r:rS},{l:'一般売上（累計）',v:fmt(cGA)+' 千円',s:'予算 '+fmt(cGB)+' 千円　達成率 '+rG+'%',r:rG},{l:'利用売上（累計）',v:fmt(cUA)+' 千円',s:'予算 '+fmt(cUB)+' 千円　達成率 '+rU+'%',r:rU},{l:'外注費（累計）',v:fmt(cOA)+' 千円',s:'予算 '+fmt(cOB)+' 千円　執行率 '+rO+'%',r:rO}];var el=document.getElementById('summaryCards');cards.forEach(function(c){var rc=c.l.includes('外注費')?(c.r<=100?'rate-good':'rate-bad'):rateClass(c.r);el.innerHTML+='<div class="card"><div class="card-label">'+c.l+'</div><div class="card-value">'+c.v+'</div><div class="card-sub '+rc+'">'+c.s+'</div></div>';});})();
-function makeChart(id,label,budgets,actuals){new Chart(document.getElementById(id),{type:'bar',data:{labels:DATA.months,datasets:[{label:'予算',data:budgets,backgroundColor:'rgba(200,200,200,0.6)',borderColor:'#aaa',borderWidth:1},{label:'実績',data:actuals,backgroundColor:'rgba(59,130,246,0.7)',borderColor:'#3b82f6',borderWidth:1}]},options:{responsive:true,plugins:{legend:{position:'top',labels:{font:{size:12}}},tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y.toLocaleString()+' 千円';}}}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return v.toLocaleString();}},title:{display:true,text:'千円'}}}}});}
-makeChart('chartGeneral','一般売上',DATA.general.budget,DATA.general.actual);
-makeChart('chartUsage','利用売上',DATA.usage.budget,DATA.usage.actual);
-makeChart('chartOutsource','外注費',DATA.outsource.budget,DATA.outsource.actual);
-function makeTable(id,budgets,actuals,isExp){var html='<tr><th>月</th><th>予算</th><th>実績</th><th>差異</th><th>'+(isExp?'執行率':'達成率')+'</th></tr>';DATA.months.forEach(function(m,i){var diff=actuals[i]-budgets[i],r=pct(actuals[i],budgets[i]),cls=i===DATA.months.length-1?' class="highlight"':'',ds=diff>=0?'+':'',dc=isExp?(diff<=0?'rate-good':'rate-bad'):(diff>=0?'rate-good':'rate-bad');html+='<tr'+cls+'><td>'+m+'</td><td>'+fmt(budgets[i])+'</td><td>'+fmt(actuals[i])+'</td><td class="'+dc+'">'+ds+fmt(diff)+'</td><td>'+r+'%</td></tr>';});document.getElementById(id).innerHTML=html;}
-makeTable('tableGeneral',DATA.general.budget,DATA.general.actual,false);
-makeTable('tableUsage',DATA.usage.budget,DATA.usage.actual,false);
-makeTable('tableOutsource',DATA.outsource.budget,DATA.outsource.actual,true);
-(function(){var items=[{n:'一般売上',b:DATA.general.budget,a:DATA.general.actual,e:false},{n:'利用売上',b:DATA.usage.budget,a:DATA.usage.actual,e:false},{n:'売上合計',b:DATA.general.budget.map(function(v,i){return v+DATA.usage.budget[i];}),a:DATA.general.actual.map(function(v,i){return v+DATA.usage.actual[i];}),e:false},{n:'外注費',b:DATA.outsource.budget,a:DATA.outsource.actual,e:true}];var html='<tr><th>項目</th><th>予算累計</th><th>実績累計</th><th>差異</th><th>達成率/執行率</th></tr>';items.forEach(function(item){var cb=item.b.reduce(function(s,v){return s+v;},0),ca=item.a.reduce(function(s,v){return s+v;},0),diff=ca-cb,r=pct(ca,cb),ds=diff>=0?'+':'',dc=item.e?(diff<=0?'rate-good':'rate-bad'):(diff>=0?'rate-good':'rate-bad');html+='<tr><td>'+item.n+'</td><td>'+fmt(cb)+'</td><td>'+fmt(ca)+'</td><td class="'+dc+'">'+ds+fmt(diff)+'</td><td>'+r+'%</td></tr>';});document.getElementById('tableCumulative').innerHTML=html;})();
-</script>
-</body>
-</html>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif; background: #fff; color: #333; line-height: 1.6; }
+.container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+header { text-align: center; padding: 20px 0 10px; border-bottom: 2px solid #e0e0e0; margin-bottom: 20px; }
+header h1 { font-size: 1.5rem; font-weight: 700; color: #1a1a1a; }
+header .subtitle { font-size: 0.85rem; color: #888; margin-top: 4px; }
+.summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 24px; }Í\[NÈBÈY[Î
+
+ÈBBÜÝ[OÚXYÙO]Û\ÜÏHÛÛZ[\XY\O¸àåxàëxàìøà¯øàêù¨*¹o#ù/&¹é/9.¢9ë¥ùk§ùî/¸àà8ààøà­øàéxàç8àï8àâOÚO]Û\ÜÏHÝX]H¹nm9n©»ï"y§"8à'ù§";ï"H;ïg9§ 9í`¹¦í9¥¬Ü[YH]ÜÜ[Ù]ÚXY\]Û\ÜÏHÝ[[X\KXØ\ÈYHØÈÙ]]Û\ÜÏHÙXÝ[Û¹. :"+9hì¹."»ï"9c`ùa¡»ï"OÚ]Û\ÜÏHÚ\]Ü\Ø[\ÈYHÌHØØ[\ÏÙ]]YHHÙ]Ù]]Û\ÜÏHÙXÝ[Û¹b*yå*9hì¹."»ï"9c`ùa¡»ï"OÚ]Û\ÜÏHÚ\]Ü\Ø[\ÈYHÌØØ[\ÏÙ]]YHÙ]Ù]]Û\ÜÏHÙXÝ[Û¹i%¹¬ê:,®ûï"9c`ùa¡»ï"OÚ]Û\ÜÏHÚ\]Ü\Ø[\ÈYHÌÈØØ[\ÏÙ]]YHÈÙ]Ù]]Û\ÜÏHÙXÝ[Û¹í+ú*":`,¹£eûï"T{ï"OÚ]YHÈÙ]Ù]ÛÝ\¸àåxàëxàìøà¯øàêù¨*¹o#ù/&¹é/9íc9e­¹ë¨yä!¸àà8ààøà­øàéxàç8àï8àâH;ï#È8àáøàï8à¯øà¯xàï8à®N]QÛÜ¹¥éyh,H;ï#Èù§"8àáøàï8à¯øàkÌËÌ¹¦`¹à®xàk¹¦ªùk¦¹`)ÙÛÝ\Ù]ØÜ\ÛÛÝ^Û[ÛÎÉÌy§"	Ë	Ì¹§"	Ë	Ìù§"	×K\[ØÍ
+LL
+MKNÍMÍË
+MLÌ_K^[ÎØÌMLMLMLKNÌLÌÌKMÍÎKLNW_KØZNØÌMLMMLMMLMKNÌLÌM
+ËMMÍMÍLW__NÂÛÛÝ]OÓØØ[TÝ[Ê	ÚKR	ÊNÂÛÛÝJKOO
+KØJL
+KÑ^Y
+JNÂÛÛÝÏJKJOOOÊOXÉÜÜÚ]]IÎÛYØ]]IÊNOXÉÜÜÚ]]IÎÛYØ]]IÊNÂÛÛÝÏJKJOOØÛÛÝ\
+KNØÛÛÝÚÏYOØOXOXÜ]\	ÏÜ[Û\ÜÏHYÙH	ÊÊÚÏÉØYÙK[Ý\ÎØYÙK][\ÊJÉÈÊÜÉÉOÜÜ[ÎßNÂ[Ý[ÛÝ[P\\^Ü]\\YXÙJ
+KOOJØ
+NßBËÈÝ[[X\BÛÛÝÚP\Ý[P\\[KÚPO\Ý[P\\[JKÜ\Ý[P\^[ËKÜO\Ý[P\^[ËJKÙÐ\Ý[P\ØZKKÙÐO\Ý[P\ØZKJNÂÛÛÝÜÐXÚPØÜÜÐOXÚPJØÜNÂØÝ[Y[Ù][[Y[RY
+	ÜØÉÊK[\SVÂÝùhì¹."¹d":*";ï"9í+ú*";ï"IËÜÐJJÉÈ9c`ùa¡ËÎù.¢9ë¥È	ÊÙÜÐJÉÈ;ï#È:`e9¢$9ã¡È	ÊÜ
+ÜÐKÜÐJÉÉIËÎÊÜÐKÜÐ[ÙJ_KÝù. :"+9hì¹."»ï"9í+ú*";ï"IËÚPJJÉÈ9c`ùa¡ËÎù.¢9ë¥È	ÊÙÚPJÉÈ;ï#È:`e9¢$9ã¡È	ÊÜ
+ÚPKÚPJÉÉIËÎÊÚPKÚP[ÙJ_KÝùb*yå*9hì¹."»ï"9í+ú*";ï"IËÜJJÉÈ9c`ùa¡ËÎù.¢9ë¥È	ÊÙÜJÉÈ;ï#È:`e9¢$9ã¡È	ÊÜ
+ÜKÜJÉÉIËÎÊÜKÜ[ÙJ_KÝùi%¹¬ê:,®ûï"9í+ú*";ï"IËÙÐJJÉÈ9c`ùa¡ËÎù.¢9ë¥È	ÊÙÙÐJÉÈ;ï#È9gíú(c9ã¡È	ÊÜ
+ÙÐKÙÐJÉÉIËÎÊÙÐKÙÐYJ_BKX\
+ÏOÏ]Û\ÜÏHØ\ÏÊØË
+ÉÏÚÏ]Û\ÜÏH[YH	ÊØËÊÉÈÊØËÉÏÙ]]Û\ÜÏHÝXÊØËÊÉÏÙ]Ù]ÊKÚ[	ÉÊNÂËÈÚ\Â[Ý[ÛXÊYË\Ë\ÑJ^Â]ÈÚ\
+ØÝ[Y[Ù][[Y[RY
+Y
+KÝ\NØ\Ë]NÛX[Î[ÛË]\Ù]ÎÂÛX[ù.¢9ë¥ÉË]NËXÚÙÜÝ[ÛÛÜÜØJ
+LÌË
+JIËÜ\ÛÛÜÜØJ
+LÌË
+
+IËÜ\ÚY_KÛX[ùk§ùî/Ë]N\ËXÚÙÜÝ[ÛÛÜ\ËX\
+
+KJOO\ÑOØOXÖÚWNOXÖÚWJOÉÜØJ
+LMËJIÎÜØJÍ
+Ë
+LËJIÊKÜ\ÛÛÜ\ËX\
+
+KJOO\ÑOØOXÖÚWNOXÖÚWJOÉÜØJ
+LMËJIÎÜØJÍ
+Ë
+LËJIÊKÜ\ÚY_B_KÜ[ÛÎÜ\ÜÛÚ]NYKXZ[Z[\ÜXÝ][ÎYKYÚ[ÎÛYÙ[ÜÜÚ][ÛÝÜ	ßKÛÛ\ØØ[XÚÜÎÛX[ÏOË]\Ù]X[
+ÉÎ	ÊÙË\ÙYJJÉÈ9c`ùa¡ß__KØØ[\ÎÞNØYÚ[]\ÎYKXÚÜÎØØ[XÚÎO_____JNÂBXÊ	ØÌIË\[\[K[ÙJNÂXÊ	ØÌË^[Ë^[ËK[ÙJNÂXÊ	ØÌÉËØZKØZKKYJNÂËÈX\Â[Ý[Û]
+YË\Ë\ÑJ^Â]IÏXOXY¹§"Ý¹.¢9ë¥ÏÝ¹k§ùî/Ý¹më¹ålÝº`e9¢$9ã¡ÏÝÝÝXYÙOÎÂ[ÛËÜXXÚ
+
+KJOOØÛÛÝX\ÖÚWKXÖÚWNØÛÛÝÏYÊ\ÖÚWKÖÚWK\ÑJNØÛÛÝZOOOLÉÈ
+ÎÉÎÂ
+ÏIÏÊÛJÜÉÏÝÊÙÖÚWJJÉÏÝÊÙ\ÖÚWJJÉÏÝÛ\ÜÏHÊØÊÉÈÊÊLÉÊÉÎÉÊJÙ
+JÉÏÝÊØÊ\ÖÚWKÖÚWK\ÑJJÉÏÝÝÎßJNÂÛÛÝØ\Ý[P\ÊKØO\Ý[P\\ÊKÙXØKXØØÏYÊØKØ\ÑJNÂ
+ÏIÏÝ[OHÛ]ÙZYÚÌØÜ\]ÜÛÛYØØØÈ¹í+ú*"ÝÊÙØJÉÏÝÊÙØJJÉÏÝÛ\ÜÏHÊØØÊÉÈÊÊÙLÉÊÉÎÉÊJÙÙ
+JÉÏÝÊØÊØKØ\ÑJJÉÏÝÝÝÙOÝXOÛ\ÜÏHÝHù§"8àkÌËÌ¹¦`¹à®xàk¹¦ªùk¦¸àáøàï8à¯øàiøàfOÜÎÂØÝ[Y[Ù][[Y[RY
+Y
+K[\SZÂB]
+	ÝIË\[\[K[ÙJNÂ]
+	ÝË^[Ë^[ËK[ÙJNÂ]
+	ÝÉËØZKØZKKYJNÂËÈÝ[][]]B]ÚIÏXOXYºh!yæëÝ¹.¢9ë¥ùí+ú*"Ý¹k§ùî/¹í+ú*"Ý¹më¹ålÝº`e9¢$9ã¡ÏÝÝÝXYÙOÎÂÖÉù. :"+9hì¹."ËÚPÚPK[ÙWKÉùb*yå*9hì¹."ËÜÜK[ÙWKÉùhì¹."¹d":*"	ËÜÐÜÐK[ÙWKÉùi%¹¬ê:,®ÉËÙÐÙÐKYWWKÜXXÚ
+
+ÛKWJOOÂÛÛÝXKXÏYÊKJNØÚ
+ÏIÏÊÛÉÏÝÊÙJÉÏÝÊÙJJÉÏÝÛ\ÜÏHÊØÊÉÈÊÊLÉÊÉÎÉÊJÙ
+JÉÏÝÊØÊKJJÉÏÝÝÎßJNÂÚ
+ÏIÏÝÙOÝXOÛ\ÜÏHÝH¸ .Èy§"8à'ù§"9í+ú*";ï"ù§"8àkù¦ªùk¦¹`);ï"OÜÎÂØÝ[Y[Ù][[Y[RY
+	ÝÉÊK[\SXÚÂØÝ[Y[Ù][[Y[RY
+	Ý]	ÊK^ÛÛ[[]È]J
+KÓØØ[TÝ[Ê	ÚKR	ËÝ[YVÛNÐ\ÚXKÕÚÞ[ÉßJNÂÜØÜ\ØÙOÚ[
