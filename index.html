@@ -1,74 +1,502 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ãã­ã³ã¿ã« äºç®å®ç¸¾ããã·ã¥ãã¼ã</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif; background: #fff; color: #333; line-height: 1.6; }
-.container { max-width: 1200px; margin: 0 auto; padding: 16px; }
-header { text-align: center; padding: 20px 0 10px; border-bottom: 2px solid #e0e0e0; margin-bottom: 20px; }
-header h1 { font-size: 1.5rem; font-weight: 700; color: #1a1a1a; }
-header .subtitle { font-size: 0.85rem; color: #888; margin-top: 4px; }
-.summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 24px; }Í\[NÈBÈY[Î
-
-ÈBBÜÝ[OÚXYÙO]Û\ÜÏHÛÛZ[\XY\O¸àåxàëxàìøà¯øàêù¨*¹o#ù/&¹é/9.¢9ë¥ùk§ùî/¸àà8ààøà­øàéxàç8àï8àâOÚO]Û\ÜÏHÝX]H¹nm9n©»ï"y§"8à'ù§";ï"H;ïg9§ 9í`¹¦í9¥¬Ü[YH]ÜÜ[Ù]ÚXY\]Û\ÜÏHÝ[[X\KXØ\ÈYHØÈÙ]]Û\ÜÏHÙXÝ[Û¹. :"+9hì¹."»ï"9c`ùa¡»ï"OÚ]Û\ÜÏHÚ\]Ü\Ø[\ÈYHÌHØØ[\ÏÙ]]YHHÙ]Ù]]Û\ÜÏHÙXÝ[Û¹b*yå*9hì¹."»ï"9c`ùa¡»ï"OÚ]Û\ÜÏHÚ\]Ü\Ø[\ÈYHÌØØ[\ÏÙ]]YHÙ]Ù]]Û\ÜÏHÙXÝ[Û¹i%¹¬ê:,®ûï"9c`ùa¡»ï"OÚ]Û\ÜÏHÚ\]Ü\Ø[\ÈYHÌÈØØ[\ÏÙ]]YHÈÙ]Ù]]Û\ÜÏHÙXÝ[Û¹í+ú*":`,¹£eûï"T{ï"OÚ]YHÈÙ]Ù]ÛÝ\¸àåxàëxàìøà¯øàêù¨*¹o#ù/&¹é/9íc9e­¹ë¨yä!¸àà8ààøà­øàéxàç8àï8àâH;ï#È8àáøàï8à¯øà¯xàï8à®N]QÛÜ¹¥éyh,H;ï#Èù§"8àáøàï8à¯øàkÌËÌ¹¦`¹à®xàk¹¦ªùk¦¹`)ÙÛÝ\Ù]ØÜ\ÛÛÝ^Û[ÛÎÉÌy§"	Ë	Ì¹§"	Ë	Ìù§"	×K\[ØÍ
-LL
-MKNÍMÍË
-MLÌ_K^[ÎØÌMLMLMLKNÌLÌÌKMÍÎKLNW_KØZNØÌMLMMLMMLMKNÌLÌM
-ËMMÍMÍLW__NÂÛÛÝ]OÓØØ[TÝ[Ê	ÚKR	ÊNÂÛÛÝJKOO
-KØJL
-KÑ^Y
-JNÂÛÛÝÏJKJOOOÊOXÉÜÜÚ]]IÎÛYØ]]IÊNOXÉÜÜÚ]]IÎÛYØ]]IÊNÂÛÛÝÏJKJOOØÛÛÝ\
-KNØÛÛÝÚÏYOØOXOXÜ]\	ÏÜ[Û\ÜÏHYÙH	ÊÊÚÏÉØYÙK[Ý\ÎØYÙK][\ÊJÉÈÊÜÉÉOÜÜ[ÎßNÂ[Ý[ÛÝ[P\\^Ü]\\YXÙJ
-KOOJØ
-NßBËÈÝ[[X\BÛÛÝÚP\Ý[P\\[KÚPO\Ý[P\\[JKÜ\Ý[P\^[ËKÜO\Ý[P\^[ËJKÙÐ\Ý[P\ØZKKÙÐO\Ý[P\ØZKJNÂÛÛÝÜÐXÚPØÜÜÐOXÚPJØÜNÂØÝ[Y[Ù][[Y[RY
-	ÜØÉÊK[\SVÂÝùhì¹."¹d":*";ï"9í+ú*";ï"IËÜÐJJÉÈ9c`ùa¡ËÎù.¢9ë¥È	ÊÙÜÐJÉÈ;ï#È:`e9¢$9ã¡È	ÊÜ
-ÜÐKÜÐJÉÉIËÎÊÜÐKÜÐ[ÙJ_KÝù. :"+9hì¹."»ï"9í+ú*";ï"IËÚPJJÉÈ9c`ùa¡ËÎù.¢9ë¥È	ÊÙÚPJÉÈ;ï#È:`e9¢$9ã¡È	ÊÜ
-ÚPKÚPJÉÉIËÎÊÚPKÚP[ÙJ_KÝùb*yå*9hì¹."»ï"9í+ú*";ï"IËÜJJÉÈ9c`ùa¡ËÎù.¢9ë¥È	ÊÙÜJÉÈ;ï#È:`e9¢$9ã¡È	ÊÜ
-ÜKÜJÉÉIËÎÊÜKÜ[ÙJ_KÝùi%¹¬ê:,®ûï"9í+ú*";ï"IËÙÐJJÉÈ9c`ùa¡ËÎù.¢9ë¥È	ÊÙÙÐJÉÈ;ï#È9gíú(c9ã¡È	ÊÜ
-ÙÐKÙÐJÉÉIËÎÊÙÐKÙÐYJ_BKX\
-ÏOÏ]Û\ÜÏHØ\ÏÊØË
-ÉÏÚÏ]Û\ÜÏH[YH	ÊØËÊÉÈÊØËÉÏÙ]]Û\ÜÏHÝXÊØËÊÉÏÙ]Ù]ÊKÚ[	ÉÊNÂËÈÚ\Â[Ý[ÛXÊYË\Ë\ÑJ^Â]ÈÚ\
-ØÝ[Y[Ù][[Y[RY
-Y
-KÝ\NØ\Ë]NÛX[Î[ÛË]\Ù]ÎÂÛX[ù.¢9ë¥ÉË]NËXÚÙÜÝ[ÛÛÜÜØJ
-LÌË
-JIËÜ\ÛÛÜÜØJ
-LÌË
-
-IËÜ\ÚY_KÛX[ùk§ùî/Ë]N\ËXÚÙÜÝ[ÛÛÜ\ËX\
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フロンタル 予算実績ダッシュボード</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 30px 0 20px;
+            border-bottom: 2px solid #2c5f8a;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 1.8em;
+            color: #2c5f8a;
+            margin-bottom: 5px;
+        }
+        header .subtitle {
+            font-size: 0.95em;
+            color: #666;
+        }
+        .update-info {
+            text-align: right;
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 20px;
+        }
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #2c5f8a;
+        }
+        .card.green { border-left-color: #28a745; }
+        .card.orange { border-left-color: #fd7e14; }
+        .card.red { border-left-color: #dc3545; }
+        .card h3 {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .card .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+        }
+        .card .detail {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 5px;
+        }
+        .card .rate {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .rate.good { color: #28a745; }
+        .rate.warn { color: #fd7e14; }
+        .rate.bad { color: #dc3545; }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            font-size: 1.3em;
+            color: #2c5f8a;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        th, td {
+            padding: 10px 12px;
+            text-align: right;
+            border-bottom: 1px solid #dee2e6;
+        }
+        th {
+            background: #f1f3f5;
+            font-weight: 600;
+            color: #495057;
+        }
+        th:first-child, td:first-child {
+            text-align: left;
+        }
+        tr:hover { background: #f8f9fa; }
+        .positive { color: #28a745; }
+        .negative { color: #dc3545; }
+        .note {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #aaa;
+            font-size: 0.8em;
+            border-top: 1px solid #eee;
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            header h1 { font-size: 1.4em; }
+            .card .value { font-size: 1.4em; }
+            table { font-size: 0.8em; }
+            th, td { padding: 6px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>フロンタル株式会社 予算実績ダッシュボード</h1>
+            <div class="subtitle">2026年度（1月〜3月）</div>
+        </header>
 
-KJOO\ÑOØOXÖÚWNOXÖÚWJOÉÜØJ
-LMËJIÎÜØJÍ
-Ë
-LËJIÊKÜ\ÛÛÜ\ËX\
+        <div class="update-info">
+            最終更新: 2026年3月31日 ｜ データソース: DriveDoor日報（3/26取得分 + FJS 3/28取得分）
+        </div>
 
-KJOO\ÑOØOXÖÚWNOXÖÚWJOÉÜØJ
-LMËJIÎÜØJÍ
-Ë
-LËJIÊKÜ\ÚY_B_KÜ[ÛÎÜ\ÜÛÚ]NYKXZ[Z[\ÜXÝ][ÎYKYÚ[ÎÛYÙ[ÜÜÚ][ÛÝÜ	ßKÛÛ\ØØ[XÚÜÎÛX[ÏOË]\Ù]X[
-ÉÎ	ÊÙË\ÙYJJÉÈ9c`ùa¡ß__KØØ[\ÎÞNØYÚ[]\ÎYKXÚÜÎØØ[XÚÎO_____JNÂBXÊ	ØÌIË\[\[K[ÙJNÂXÊ	ØÌË^[Ë^[ËK[ÙJNÂXÊ	ØÌÉËØZKØZKKYJNÂËÈX\Â[Ý[Û]
-YË\Ë\ÑJ^Â]IÏXOXY¹§"Ý¹.¢9ë¥ÏÝ¹k§ùî/Ý¹më¹ålÝº`e9¢$9ã¡ÏÝÝÝXYÙOÎÂ[ÛËÜXXÚ
+        <!-- Summary Cards -->
+        <div class="summary-cards" id="summaryCards"></div>
 
-KJOOØÛÛÝX\ÖÚWKXÖÚWNØÛÛÝÏYÊ\ÖÚWKÖÚWK\ÑJNØÛÛÝZOOOLÉÈ
-ÎÉÎÂ
-ÏIÏÊÛJÜÉÏÝÊÙÖÚWJJÉÏÝÊÙ\ÖÚWJJÉÏÝÛ\ÜÏHÊØÊÉÈÊÊLÉÊÉÎÉÊJÙ
-JÉÏÝÊØÊ\ÖÚWKÖÚWK\ÑJJÉÏÝÝÎßJNÂÛÛÝØ\Ý[P\ÊKØO\Ý[P\\ÊKÙXØKXØØÏYÊØKØ\ÑJNÂ
-ÏIÏÝ[OHÛ]ÙZYÚÌØÜ\]ÜÛÛYØØØÈ¹í+ú*"ÝÊÙØJÉÏÝÊÙØJJÉÏÝÛ\ÜÏHÊØØÊÉÈÊÊÙLÉÊÉÎÉÊJÙÙ
-JÉÏÝÊØÊØKØ\ÑJJÉÏÝÝÝÙOÝXOÛ\ÜÏHÝHù§"8àkÌËÌ¹¦`¹à®xàk¹¦ªùk¦¸àáøàï8à¯øàiøàfOÜÎÂØÝ[Y[Ù][[Y[RY
-Y
-K[\SZÂB]
-	ÝIË\[\[K[ÙJNÂ]
-	ÝË^[Ë^[ËK[ÙJNÂ]
-	ÝÉËØZKØZKKYJNÂËÈÝ[][]]B]ÚIÏXOXYºh!yæëÝ¹.¢9ë¥ùí+ú*"Ý¹k§ùî/¹í+ú*"Ý¹më¹ålÝº`e9¢$9ã¡ÏÝÝÝXYÙOÎÂÖÉù. :"+9hì¹."ËÚPÚPK[ÙWKÉùb*yå*9hì¹."ËÜÜK[ÙWKÉùhì¹."¹d":*"	ËÜÐÜÐK[ÙWKÉùi%¹¬ê:,®ÉËÙÐÙÐKYWWKÜXXÚ
+        <!-- 一般売上セクション -->
+        <div class="section">
+            <h2>一般売上</h2>
+            <div class="chart-container">
+                <canvas id="chartGeneral"></canvas>
+            </div>
+            <table id="tableGeneral"></table>
+        </div>
 
-ÛKWJOOÂÛÛÝXKXÏYÊKJNØÚ
-ÏIÏÊÛÉÏÝÊÙJÉÏÝÊÙJJÉÏÝÛ\ÜÏHÊØÊÉÈÊÊLÉÊÉÎÉÊJÙ
-JÉÏÝÊØÊKJJÉÏÝÝÎßJNÂÚ
-ÏIÏÝÙOÝXOÛ\ÜÏHÝH¸ .Èy§"8à'ù§"9í+ú*";ï"ù§"8àkù¦ªùk¦¹`);ï"OÜÎÂØÝ[Y[Ù][[Y[RY
-	ÝÉÊK[\SXÚÂØÝ[Y[Ù][[Y[RY
-	Ý]	ÊK^ÛÛ[[]È]J
-KÓØØ[TÝ[Ê	ÚKR	ËÝ[YVÛNÐ\ÚXKÕÚÞ[ÉßJNÂÜØÜ\ØÙOÚ[
+        <!-- 利用売上セクション -->
+        <div class="section">
+            <h2>利用売上</h2>
+            <div class="chart-container">
+                <canvas id="chartUsage"></canvas>
+            </div>
+            <table id="tableUsage"></table>
+        </div>
+
+        <!-- 外注費セクション -->
+        <div class="section">
+            <h2>外注費</h2>
+            <div class="chart-container">
+                <canvas id="chartOutsource"></canvas>
+            </div>
+            <table id="tableOutsource"></table>
+            <p class="note">※ 外注費は低いほど良好。達成率が100%以下の場合、予算内に収まっていることを示します。</p>
+        </div>
+
+        <!-- 累計進捗 -->
+        <div class="section">
+            <h2>1Q累計進捗（1月〜3月）</h2>
+            <div class="chart-container">
+                <canvas id="chartCumulative"></canvas>
+            </div>
+            <table id="tableCumulative"></table>
+            <p class="note">※ 3月は月途中のデータ（〜3/26時点）のため、最終実績は変動します。</p>
+        </div>
+
+        <footer>
+            フロンタル株式会社 管理部 ｜ 自動生成レポート
+        </footer>
+    </div>
+
+    <script>
+        // === DATA ===
+        const months = ['1月', '2月', '3月'];
+
+        const data = {
+            general: {
+                label: '一般売上',
+                budget: [40260, 41100, 54000],
+                actual: [42569, 43081, 29320]
+            },
+            usage: {
+                label: '利用売上',
+                budget: [15800, 19500, 18200],
+                actual: [16817, 20562, 6333]
+            },
+            outsource: {
+                label: '外注費',
+                budget: [16000, 19000, 15000],
+                actual: [16323, 19605, 9286]
+            }
+        };
+
+        // === HELPER FUNCTIONS ===
+        function formatNum(n) {
+            return n.toLocaleString('ja-JP');
+        }
+
+        function calcRate(actual, budget) {
+            return budget > 0 ? (actual / budget * 100) : 0;
+        }
+
+        function rateClass(rate, isExpense) {
+            if (isExpense) {
+                return rate <= 100 ? 'good' : rate <= 110 ? 'warn' : 'bad';
+            }
+            return rate >= 100 ? 'good' : rate >= 90 ? 'warn' : 'bad';
+        }
+
+        function cardClass(rate, isExpense) {
+            if (isExpense) {
+                return rate <= 100 ? 'green' : rate <= 110 ? 'orange' : 'red';
+            }
+            return rate >= 100 ? 'green' : rate >= 90 ? 'orange' : 'red';
+        }
+
+        // === SUMMARY CARDS ===
+        function renderSummary() {
+            const container = document.getElementById('summaryCards');
+            const items = [
+                { key: 'general', name: '一般売上（1Q累計）', isExpense: false },
+                { key: 'usage', name: '利用売上（1Q累計）', isExpense: false },
+                { key: 'outsource', name: '外注費（1Q累計）', isExpense: true }
+            ];
+
+            items.forEach(item => {
+                const d = data[item.key];
+                const totalBudget = d.budget.reduce((a, b) => a + b, 0);
+                const totalActual = d.actual.reduce((a, b) => a + b, 0);
+                const rate = calcRate(totalActual, totalBudget);
+                const diff = totalActual - totalBudget;
+                const cls = cardClass(rate, item.isExpense);
+                const rCls = rateClass(rate, item.isExpense);
+
+                container.innerHTML += `
+                    <div class="card ${cls}">
+                        <h3>${item.name}</h3>
+                        <div class="value">${formatNum(totalActual)} <span style="font-size:0.5em">千円</span></div>
+                        <div class="detail">予算: ${formatNum(totalBudget)}千円｜ 差痃: <span class="${diff >= 0 ? (item.isExpense ? 'negative' : 'positive') : (item.isExpense ? 'positive' : 'negative')}">${diff >= 0 ? '+' : ''}${formatNum(diff)}千円</span></div>
+                        <div class="rate ${rCls}">達成率: ${rate.toFixed(1)}%</div>
+                    </div>
+                `;
+            });
+        }
+
+        // === CHARTS ===
+        function createBarChart(canvasId, label, budgetData, actualData, color) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: '予算',
+                            data: budgetData,
+                            backgroundColor: 'rgba(44, 95, 138, 0.3)',
+                            borderColor: 'rgba(44, 95, 138, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '実績',
+                            data: actualData,
+                            backgroundColor: color + '80',
+                            borderColor: color,
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: label + '（予算 vs 実績）',
+                            font: { size: 14 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatNum(context.raw) + '千円';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) { return formatNum(value) + '千円'; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // === TABLES ===
+        function createTable(tableId, d, isExpense) {
+            const table = document.getElementById(tableId);
+            let html = `
+                <thead>
+                    <tr>
+                        <th>月</th>
+                        <th>予算（千円）</th>
+                        <th>実績（千円）</th>
+                        <th>差異（千円）</th>
+                        <th>達成率</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            let totalBudget = 0, totalActual = 0;
+            for (let i = 0; i < months.length; i++) {
+                const budget = d.budget[i];
+                const actual = d.actual[i];
+                const diff = actual - budget;
+                const rate = calcRate(actual, budget);
+                const diffClass = diff >= 0 ? (isExpense ? 'negative' : 'positive') : (isExpense ? 'possitive' : 'negative');
+                const rCls = rateClass(rate, isExpense);
+                totalBudget += budget;
+                totalActual += actual;
+
+                html += `
+                    <tr>
+                        <td>${months[i]}${i === 2 ? ' *' : ''}</td>
+                        <td>${formatNum(budget)}</td>
+                        <td>${formatNum(actual)}</td>
+                        <td class="${diffClass}">${diff >= 0 ? '+' : ''}${formatNum(diff)}</td>
+                        <td class="rate ${rCls}">${rate.toFixed(1)}%</td>
+                    </tr>
+                `;
+            }
+
+            const totalDiff = totalActual - totalBudget;
+            const totalRate = calcRate(totalActual, totalBudget);
+            const totalDiffClass = totalDiff >= 0 ? (isExpense ? 'negative' : 'positive') : (isExpense ? 'positive' : 'negative');
+            const totalRCls = rateClass(totalRate, isExpense);
+
+            html += `
+                    <tr style="font-weight:bold; border-top:2px solid #333;">
+                        <td>累計</td>
+                        <td>${formatNum(totalBudget)}</td>
+                        <td>${formatNum(totalActual)}</td>
+                        <td class="${totalDiffClass}">${totalDiff >= 0 ? '+' : ''}${formatNum(totalDiff)}</td>
+                        <td class="rate ${totalRCls}">${totalRate.toFixed(1)}%</td>
+                    </tr>
+                </tbody>
+            `;
+
+            table.innerHTML = html;
+        }
+
+        // === CUMULATIVE CHART ===
+        function createCumulativeChart() {
+            const ctx = document.getElementById('chartCumulative').getContext('2d');
+
+            const categories = ['一般売上', '利用売上', '外注費'];
+            const budgets = [
+                data.general.budget.reduce((a, b) => a + b, 0),
+                data.usage.budget.reduce((a, b) => a + b, 0),
+                data.outsource.budget.reduce((a, b) => a + b, 0)
+            ];
+            const actuals = [
+                data.general.actual.reduce((a, b) => a + b, 0),
+                data.usage.actual.reduce((a, b) => a + b, 0),
+                data.outsource.actual.reduce((a, b) => a + b, 0)
+            ];
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: categories,
+                    datasets: [
+                        {
+                            label: '予算（1Q累計）',
+                            data: budgets,
+                            backgroundColor: 'rgba(44, 95, 138, 0.3)',
+                            borderColor: 'rgba(44, 95, 138, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '実績（1Q累計）',
+                            data: actuals,
+                            backgroundColor: ['rgba(40, 167, 69, 0.5)', 'rgba(0, 123, 255, 0.5)', 'rgba(253, 126, 20, 0.5)'],
+                            borderColor: ['#28a745', '#007bff', '#fd7e14'],
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '1Q累計 予算 vs 実績',
+                            font: { size: 14 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatNum(context.raw) + '千円';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) { return formatNum(value) + '千円'; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createCumulativeTable() {
+            const table = document.getElementById('tableCumulative');
+            const items = [
+                { name: '一般売上', d: data.general, isExpense: false },
+                { name: '利用売上', d: data.usage, isExpense: false },
+                { name: '外注費', d: data.outsource, isExpense: true }
+            ];
+
+            let html = `
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>予算（千円）</th>
+                        <th>実績（千円）</th>
+                        <th>差異（千円）</th>
+                        <th>達成率</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            items.forEach(item => {
+                const budget = item.d.budget.reduce((a, b) => a + b, 0);
+                const actual = item.d.actual.reduce((a, b) => a + b, 0);
+                const diff = actual - budget;
+                const rate = calcRate(actual, budget);
+                const diffClass = diff >= 0 ? (item.isExpense ? 'negative' : 'positive') : (item.isExpense ? 'positive' : 'negative');
+                const rCls = rateClass(rate, item.isExpense);
+
+                html += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${formatNum(budget)}</td>
+                        <td>${formatNum(actual)}</td>
+                        <td class="${diffClass}">${diff >= 0 ? '+' : ''}${formatNum(diff)}</td>
+                        <td class="rate ${rCls}">${rate.toFixed(1)}%</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+
+        // === INIT ===
+        renderSummary();
+        createBarChart('chartGeneral', '一般売上', data.general.budget, data.general.actual, '#28a745');
+        createBarChart('chartUsage', '利用売上', data.usage.budget, data.usage.actual, '#007bff');
+        createBarChart('chartOutsource', '外注費', data.outsource.budget, data.outsource.actual, '#fd7e14');
+        createTable('tableGeneral', data.general, false);
+        createTable('tableUsage', data.usage, false);
+        createTable('tableOutsource', data.outsource, true);
+        createCumulativeChart();
+        createCumulativeTable();
+    </script>
+</body>
+</html>
