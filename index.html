@@ -9,48 +9,37 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-      background: #ffffff;
-      color: #333;
-      line-height: 1.5;
+      background: #fff; color: #333; line-height: 1.5;
     }
     header {
-      background: #1a3a5c;
-      color: #fff;
-      padding: 18px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
+      background: #1a3a5c; color: #fff; padding: 16px 24px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
     }
-    header h1 { font-size: 1.25rem; font-weight: 700; }
-    header .meta { font-size: 0.78rem; opacity: 0.8; text-align: right; }
+    header h1 { font-size: 1.2rem; font-weight: 700; }
+    header .meta { font-size: 0.76rem; opacity: 0.8; text-align: right; }
     .container { max-width: 1200px; margin: 0 auto; padding: 20px 16px; }
-    .ytd-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      margin-bottom: 28px;
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 32px; }
+    .kpi {
+      background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px;
+      border-left: 4px solid #1a3a5c;
     }
-    .ytd-item {
-      background: #f8f9fa;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 14px 16px;
-    }
-    .ytd-item .label { font-size: 0.75rem; color: #666; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
-    .ytd-item .val { font-size: 1.4rem; font-weight: 700; color: #1a3a5c; }
-    .ytd-item .rate { font-size: 0.78rem; margin-top: 6px; font-weight: 600; }
-    .rate-pos  { color: #1a7a45; }
-    .rate-neg  { color: #c0392b; }
-    .rate-warn { color: #e67e22; }
-    .rate-gray { color: #888; }
-    .progress-bar-bg { background: #e9ecef; border-radius: 4px; height: 6px; margin-top: 6px; overflow: hidden; }
-    .progress-bar-fg { height: 100%; border-radius: 4px; }
-    .bg-blue  { background: #1a3a5c; }
-    .bg-green { background: #28a745; }
-    .bg-red   { background: #dc3545; }
-    .bg-warn  { background: #fd7e14; }
+    .kpi.green { border-left-color: #28a745; }
+    .kpi.red   { border-left-color: #dc3545; }
+    .kpi.warn  { border-left-color: #fd7e14; }
+    .kpi .kpi-label { font-size: 0.72rem; color: #666; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .kpi .kpi-val   { font-size: 1.5rem; font-weight: 700; color: #1a3a5c; }
+    .kpi .kpi-sub   { font-size: 0.76rem; margin-top: 5px; color: #555; }
+    .kpi .kpi-rate  { font-size: 0.8rem; font-weight: 700; margin-top: 4px; }
+    .kpi .bar-bg { background: #e9ecef; border-radius: 3px; height: 5px; margin-top: 7px; overflow: hidden; }
+    .kpi .bar-fg { height: 100%; border-radius: 3px; }
+    .c-blue  { background: #1a3a5c; }
+    .c-green { background: #28a745; }
+    .c-red   { background: #dc3545; }
+    .c-warn  { background: #fd7e14; }
+    .t-green { color: #1a7a45; }
+    .t-red   { color: #c0392b; }
+    .t-warn  { color: #e67e22; }
+    .t-gray  { color: #888; }
     .section { margin-bottom: 40px; }
     .section-title {
       font-size: 1rem; font-weight: 700; color: #1a3a5c;
@@ -58,24 +47,38 @@
     }
     .chart-box {
       background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px;
-      padding: 16px; margin-bottom: 14px;
+      padding: 16px; margin-bottom: 12px;
     }
-    .chart-box canvas { max-height: 260px; }
+    .chart-box canvas { max-height: 240px; }
     .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
-    thead th { background: #1a3a5c; color: #fff; padding: 9px 12px; text-align: center; white-space: nowrap; }
-    tbody td { padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right; white-space: nowrap; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    thead th { background: #1a3a5c; color: #fff; padding: 8px 10px; text-align: center; white-space: nowrap; }
+    tbody td { padding: 7px 10px; border-bottom: 1px solid #eee; text-align: right; white-space: nowrap; }
     tbody td:first-child { text-align: center; font-weight: 600; }
     tbody tr:hover { background: #f0f4f8; }
-    tbody tr:nth-child(even) { background: #fafbfc; }
-    tbody tr:nth-child(even):hover { background: #f0f4f8; }
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
-    .badge-over  { background: #d4edda; color: #155724; }
-    .badge-under { background: #f8d7da; color: #721c24; }
-    .badge-na    { background: #e9ecef; color: #6c757d; }
-    .note { font-size: 0.74rem; color: #888; margin-top: 6px; }
+    .badge { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 0.72rem; font-weight: 600; }
+    .b-ok { background: #d4edda; color: #155724; }
+    .b-ng { background: #f8d7da; color: #721c24; }
+    .b-na { background: #e9ecef; color: #6c757d; }
+    .note { font-size: 0.73rem; color: #888; margin-top: 6px; line-height: 1.6; }
+    .alert-banner {
+      background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px;
+      padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px;
+    }
+    .alert-banner .alert-icon { font-size: 1.2rem; line-height: 1.3; flex-shrink: 0; }
+    .alert-banner .alert-body { font-size: 0.82rem; color: #664d03; line-height: 1.7; }
+    .alert-banner .alert-body strong { font-size: 0.88rem; display: block; margin-bottom: 2px; }
+    .kpi-incomplete {
+      background: #fff8e1; border-color: #e0e0e0; border-left-color: #ffc107 !important;
+    }
+    .incomplete-tag {
+      display: inline-block; background: #ffc107; color: #664d03;
+      font-size: 0.68rem; font-weight: 700; padding: 1px 7px; border-radius: 3px;
+      margin-bottom: 4px; letter-spacing: 0.03em;
+    }
     @media (max-width: 600px) {
-      .ytd-row { grid-template-columns: 1fr 1fr; }
+      .kpi-row { grid-template-columns: 1fr 1fr; }
+      .kpi .kpi-val { font-size: 1.2rem; }
     }
   </style>
 </head>
@@ -84,173 +87,256 @@
   <h1>&#128202; フロンタル 予算実績ダッシュボード 2026</h1>
   <div class="meta">
     最終更新: 2026年4月3日 07:09<br>
-    データソース: DriveDoor（2026/01/01～04/03取得）
+    データソース: DriveDoor（2026/01/01〜04/03取得）
   </div>
 </header>
 
 <div class="container">
 
+  <!-- KPI サマリー -->
   <div class="section">
-    <div class="section-title">2026年度 累計サマリー（1～3月確定 ＋ 4月速報）</div>
-    <div class="ytd-row">
-      <div class="ytd-item">
-        <div class="label">一般売上 累計（1-3月）</div>
-        <div class="val">129,631千円</div>
-        <div class="rate rate-warn">予算比 95.8%（予算14万5,360千円）</div>
-        <div class="progress-bar-bg"><div class="progress-bar-fg bg-warn" style="width:95.8%"></div></div>
+    <div class="section-title">2026年度サマリー</div>
+
+    <!-- 未集計警告バナー -->
+    <div class="alert-banner">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-body">
+        <strong>3月分の一般原価が未入力のため、一般粗利・粗利計は 1〜2月の確定値のみです</strong>
+        DriveDoor への燃料費・交通費・車両費・人件費の入力が完了していません。3月分の原価が入力され次第、数値が更新されます。<br>
+        ※ 一般売上は1〜3月合計（確定）／利用貨物粗利は1〜3月合計（確定）
       </div>
-      <div class="ytd-item">
-        <div class="label">利用売上 累計（1-3月）</div>
-        <div class="val">45,124千円</div>
-        <div class="rate rate-neg">予算比 84.3%（予算53,500千円）</div>
-        <div class="progress-bar-bg"><div class="progress-bar-fg bg-red" style="width:84.3%"></div></div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi warn">
+        <div class="kpi-label">一般売上（1〜3月 確定）</div>
+        <div class="kpi-val">129,631<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-sub">予算 135,360千円</div>
+        <div class="kpi-rate t-warn">達成率 95.8%</div>
+        <div class="bar-bg"><div class="bar-fg c-warn" style="width:95.8%"></div></div>
       </div>
-      <div class="ytd-item">
-        <div class="label">外注費 累計（1-3月）</div>
-        <div class="val">48,305千円</div>
-        <div class="rate rate-pos">96.6%で予算内（予算50,000千円）</div>
-        <div class="progress-bar-bg"><div class="progress-bar-fg bg-green" style="width:96.6%"></div></div>
+      <div class="kpi green kpi-incomplete">
+        <div class="incomplete-tag">⚠ 3月原価未入力 — 暫定値</div>
+        <div class="kpi-label">一般粗利（1〜2月確定のみ）</div>
+        <div class="kpi-val">19,428<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-sub">予算 17,886千円（1-2月分） | 達成率 108.6% ✅</div>
+        <div class="kpi-rate t-green">粗利率: 1月 25.0% / 2月 20.4%</div>
+        <div class="bar-bg"><div class="bar-fg c-green" style="width:100%"></div></div>
+        <div class="note" style="color:#a06000;">3月の原価入力後に再集計が必要です</div>
       </div>
-      <div class="ytd-item">
-        <div class="label">合計売上 累計（1-3月）</div>
-        <div class="val">174,755千円</div>
-        <div class="rate rate-warn">予算比 92.5%（予算18万8,860千円）</div>
-        <div class="progress-bar-bg"><div class="progress-bar-fg bg-blue" style="width:92.5%"></div></div>
+      <div class="kpi red">
+        <div class="kpi-label">利用貨物粗利（1〜3月 確定）</div>
+        <div class="kpi-val" style="color:#c0392b">▲3,181<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-sub">予算 3,258千円（1,086×3ヶ月）</div>
+        <div class="kpi-rate t-red">粗利率: 1月 2.9% / 2月 4.7% / 3月 ▲59.8%</div>
+        <div class="bar-bg"><div class="bar-fg c-red" style="width:100%"></div></div>
+        <div class="note">※3月 利用売上7,745 vs 外注費12,377（要確認）</div>
       </div>
-      <div class="ytd-item">
-        <div class="label">4月 速報（~4/3）</div>
-        <div class="val">334千円</div>
-        <div class="rate rate-gray">月初3日分のみ・集計中</div>
-        <div class="progress-bar-bg"><div class="progress-bar-fg bg-warn" style="width:0.8%"></div></div>
+      <div class="kpi green kpi-incomplete">
+        <div class="incomplete-tag">⚠ 3月原価未入力 — 暫定値</div>
+        <div class="kpi-label">粗利計（1〜2月確定のみ）</div>
+        <div class="kpi-val">20,879<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-sub">予算 18,186千円（1-2月分）</div>
+        <div class="kpi-rate t-green">達成率 114.8% ✅</div>
+        <div class="bar-bg"><div class="bar-fg c-green" style="width:100%"></div></div>
+        <div class="note" style="color:#a06000;">3月の原価入力後に再集計が必要です</div>
       </div>
     </div>
   </div>
+
+  <!-- 一般売上・粗利 -->
   <div class="section">
-    <div class="section-title">一般売上</div>
+    <div class="section-title">一般売上・粗利</div>
     <div class="chart-box"><canvas id="chart-ippan"></canvas></div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>月</th><th>予算（千円）</th><th>実績（千円）</th><th>差異（千円）</th><th>達成率</th><th>状態</th></tr></thead>
+        <thead>
+          <tr>
+            <th>月</th>
+            <th>一般売上 予算</th><th>一般売上 実績</th><th>売上達成率</th>
+            <th>一般原価 予算</th><th>一般原価 実績</th>
+            <th>一般粗利 予算</th><th>一般粗利 実績</th><th>一般粗利率</th>
+          </tr>
+        </thead>
         <tbody id="tb-ippan"></tbody>
       </table>
     </div>
-    <p class="note">※3月は4/3時点の確定値。4月は速報値（月初3日分）。</p>
+    <p class="note">※一般原価 = 燃料費 + 交通費 + 車両費 + 人件費 + 保険料（車両経費一覧より）。3月は保険料940千円のみ確定、他は未入力。</p>
   </div>
 
+  <!-- 一般原価 -->
   <div class="section">
-    <div class="section-title">利用売上（利用貨物）</div>
+    <div class="section-title">一般原価（費目別）</div>
+    <div class="chart-box"><canvas id="chart-cost"></canvas></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>月</th>
+            <th>燃料費</th><th>交通費</th><th>車両費</th><th>人件費</th><th>保険料</th>
+            <th>原価合計</th><th>予算合計</th><th>状態</th>
+          </tr>
+        </thead>
+        <tbody id="tb-cost"></tbody>
+      </table>
+    </div>
+    <p class="note">※車両費 = オイル + タイヤ + 修繕費 + 固定車両費の合算。リース料・倉庫賃料・固定費等は別途管理のため集計対象外。<br>
+    ※3月は保険料940千円のみ確定。燃料費・交通費・車両費・人件費はDriveDoor未入力。</p>
+  </div>
+
+  <!-- 利用売上・粗利 -->
+  <div class="section">
+    <div class="section-title">利用売上・粗利</div>
     <div class="chart-box"><canvas id="chart-riyo"></canvas></div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>月</th><th>予算（千円）</th><th>実績（千円）</th><th>差異（千円）</th><th>達成率</th><th>状態</th></tr></thead>
+        <thead>
+          <tr>
+            <th>月</th>
+            <th>利用売上 予算</th><th>利用売上 実績</th>
+            <th>利用粗利 実績</th>
+            <th>利用粗利率（目標 6.7%）</th>
+          </tr>
+        </thead>
         <tbody id="tb-riyo"></tbody>
       </table>
     </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">外注費（利用貨物 支払）</div>
-    <div class="chart-box"><canvas id="chart-gaichuu"></canvas></div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>月</th><th>予算（千円）</th><th>実績（千円）</th><th>差異（千円）</th><th>対予算</th><th>状態</th></tr></thead>
-        <tbody id="tb-gaichuu"></tbody>
-      </table>
-    </div>
-    <p class="note">※外注費は予算以内であるほど良い（コスト抑制）。緯＝予算内、赤＝予算超過。</p>
+    <p class="note">※利用粗利 = 利用売上（請求金額）− 利用外注費（支払金額）。3月は利用売上7,745千円に対し外注費12,377千円で▲4,632千円。要因確認が必要。</p>
   </div>
 
 </div>
+
 <script>
-const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+const nn=null;
 
-const data = {
-  ippan: {
-    budget: [40260,41100,54000,42500,43800,44200,45000,43500,44800,45500,44000,46000],
-    actual: [42569,43081,43981,  334, null, null, null, null, null, null, null, null]
-  },
-  riyo: {
-    budget: [15800,19500,18200,17000,18500,19000,20000,19200,19800,20500,19500,21000],
-    actual: [16817,20562, 7745,    0, null, null, null, null, null, null, null, null]
-  },
-  gaichuu: {
-    budget: [16000,19000,15000,16500,17000,17500,18000,17200,17800,18200,17500,18500],
-    actual: [16323,19605,12377,    0, null, null, null, null, null, null, null, null]
-  }
-};
+// 実績
+const ippan_sales_act=[42569,43081,43981,334,nn,nn,nn,nn,nn,nn,nn,nn];
+const ippan_cost_act =[31930,34292,940,nn,nn,nn,nn,nn,nn,nn,nn,nn]; // 3月は保険料のみ
+const ippan_gross_act=[10639,8789,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];   // 3月は算出不可
+const riyo_sales_act =[16817,20562,7745,0,nn,nn,nn,nn,nn,nn,nn,nn];
+const riyo_cost_act  =[16323,19605,12377,0,nn,nn,nn,nn,nn,nn,nn,nn];
+const riyo_gross_act =[494,957,-4632,0,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_nenryo_act=[9039,9844,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_kotsu_act =[3952,4132,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_sharyo_act=[1901,4190,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_jinken_act=[16410,15499,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_hoken_act =[628,628,940,nn,nn,nn,nn,nn,nn,nn,nn,nn];
 
-function fmt(v) {
-  if (v === null || v === undefined) return '—';
-  return v.toLocaleString('ja-JP');
-}
+// 予算
+const ippan_sales_bud=[40260,41100,54000,42500,43800,44200,45000,43500,44800,45500,44000,46000];
+const ippan_cost_bud =[31055,32419,40199,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const ippan_gross_bud=[9205,8681,13801,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+// 利用売上予算・外注費予算は手順書の値（毎月固定）
+const riyo_sales_bud =[16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100];
+const riyo_cost_bud  =[15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014];
+const riyo_gross_bud =riyo_sales_bud.map((s,i)=>s-riyo_cost_bud[i]);
+const cost_nenryo_bud=[9710,9830,13630,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_kotsu_bud =[4405,4405,5215,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_sharyo_bud=[2250,2250,2320,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_jinken_bud=[14082,15316,18073,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_hoken_bud =[608,618,961,nn,nn,nn,nn,nn,nn,nn,nn,nn];
 
-function badge(act, bud, isCost) {
-  if (act === null) return '<span class="badge badge-na">未確定</span>';
-  const r = act / bud * 100;
-  const good = isCost ? r <= 100 : r >= 100;
-  const label = isCost
-    ? (good ? `抑制 ${r.toFixed(1)}%` : `超過 ${r.toFixed(1)}%`)
-    : (good ? `達成 ${r.toFixed(1)}%` : `${r.toFixed(1)}%`);
-  return `<span class="badge ${good ? 'badge-over' : 'badge-under'}">${label}</span>`;
-}
+// ユーティリティ
+const fmt=v=>v===null?'—':v.toLocaleString('ja-JP');
+const cOK='rgba(26,122,69,0.75)',cNG='rgba(192,57,43,0.75)',cNA='rgba(200,200,200,0.18)';
+const bOK='rgba(26,122,69,1)',bNG='rgba(192,57,43,1)',bNA='rgba(180,180,180,0.3)';
+function acC(a,b,inv=false){return a.map((v,i)=>{if(v===null)return cNA;return(inv?v<=b[i]:v>=b[i])?cOK:cNG;});}
+function acB(a,b,inv=false){return a.map((v,i)=>{if(v===null)return bNA;return(inv?v<=b[i]:v>=b[i])?bOK:bNG;});}
+function badgeSales(a,b){if(a===null)return'<span class="badge b-na">未確定</span>';const r=a/b*100;return r>=100?`<span class="badge b-ok">達成 ${r.toFixed(1)}%</span>`:`<span class="badge b-ng">${r.toFixed(1)}%</span>`;}
+function badgeCost(a,b){if(a===null||b===null)return'<span class="badge b-na">未確定</span>';const r=a/b*100;return r<=100?`<span class="badge b-ok">予算内 ${r.toFixed(1)}%</span>`:`<span class="badge b-ng">超過 ${r.toFixed(1)}%</span>`;}
+function badgeGross(a,b){if(a===null)return'<span class="badge b-na">未確定</span>';if(a<0)return`<span class="badge b-ng">▲赤字</span>`;if(b===null)return`<span class="badge b-na">${a.toLocaleString('ja-JP')}</span>`;const r=a/b*100;return r>=100?`<span class="badge b-ok">✅ ${r.toFixed(1)}%</span>`:`<span class="badge b-ng">${r.toFixed(1)}%</span>`;}
+const tipFmt=c=>`${c.dataset.label}: ${c.raw!==null?c.raw.toLocaleString('ja-JP')+'千円':'未確定'}`;
 
-function fillTable(id, d, isCost) {
-  const tb = document.getElementById(id);
-  months.forEach((m, i) => {
-    const bud = d.budget[i], act = d.actual[i];
-    const diff = act !== null ? act - bud : null;
-    const good = diff === null ? null : (isCost ? diff <= 0 : diff >= 0);
-    const dc = diff === null ? '#aaa' : (good ? '#1a7a45' : '#c0392b');
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${m}</td><td>${fmt(bud)}</td><td>${act!==null?fmt(act):'—'}</td>`
-      + `<td style="color:${dc}">${diff!==null?(diff>=0?'+':'')+fmt(diff):'—'}</td>`
-      + `<td>${act!==null?(act/bud*100).toFixed(1)+'%':'—'}</td>`
-      + `<td>${badge(act,bud,isCost)}</td>`;
-    tb.appendChild(tr);
+// Chart 1: 一般売上・粗利
+new Chart(document.getElementById('chart-ippan').getContext('2d'),{
+  data:{labels:months,datasets:[
+    {type:'bar',label:'一般売上 予算',data:ippan_sales_bud,backgroundColor:'rgba(26,58,92,0.18)',borderColor:'rgba(26,58,92,0.5)',borderWidth:1,yAxisID:'y'},
+    {type:'bar',label:'一般売上 実績',data:ippan_sales_act,backgroundColor:acC(ippan_sales_act,ippan_sales_bud),borderColor:acB(ippan_sales_act,ippan_sales_bud),borderWidth:1,yAxisID:'y'},
+    {type:'line',label:'一般粗利 予算',data:ippan_gross_bud,borderColor:'rgba(230,126,34,0.45)',borderDash:[4,4],borderWidth:1.5,pointRadius:3,backgroundColor:'transparent',order:2,yAxisID:'y',tension:0.3,spanGaps:false},
+    {type:'line',label:'一般粗利 実績',data:ippan_gross_act,borderColor:'#e67e22',backgroundColor:'rgba(230,126,34,0.1)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#e67e22',order:1,yAxisID:'y',tension:0.3,spanGaps:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:tipFmt}}},scales:{y:{beginAtZero:false,ticks:{callback:v=>v.toLocaleString('ja-JP')}}}}
+});
+
+// 一般売上・粗利 テーブル
+(function(){
+  const tb=document.getElementById('tb-ippan');
+  months.forEach((m,i)=>{
+    const sa=ippan_sales_act[i],sb=ippan_sales_bud[i],ca=ippan_cost_act[i],cb=ippan_cost_bud[i],ga=ippan_gross_act[i],gb=ippan_gross_bud[i];
+    const gpr = ga!==null&&sa&&sa>0 ? (ga/sa*100).toFixed(1)+'%' : '—';
+    const gprStyle = ga!==null&&sa>0 ? (ga/sa>=0.15?'color:#1a7a45':ga/sa>=0?'color:#e67e22':'color:#c0392b') : '';
+    const caCell=i===2?`<td>${fmt(ca)}<small style="color:#aaa"> ※保険料のみ</small></td>`:`<td>${fmt(ca)}</td>`;
+    const gaCell=ga!==null?`<td>${fmt(ga)}</td>`:`<td><span style="color:#bbb">算出不可</span></td>`;
+    tb.insertAdjacentHTML('beforeend',`<tr><td>${m}</td><td>${fmt(sb)}</td><td>${fmt(sa)}</td><td>${badgeSales(sa,sb)}</td><td>${fmt(cb)}</td>${caCell}<td>${fmt(gb)}</td>${gaCell}<td style="${gprStyle}"><strong>${gpr}</strong></td></tr>`);
   });
-}
+})();
 
-function makeChart(id, d, isCost) {
-  const ctx = document.getElementById(id).getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: months,
-      datasets: [
-        { label: '予算', data: d.budget, backgroundColor: 'rgba(26,58,92,0.14)', borderColor: 'rgba(26,58,92,0.45)', borderWidth: 1, order: 2 },
-        {
-          label: '実績',
-          data: d.actual,
-          backgroundColor: d.actual.map((v,i) => {
-            if (v === null) return 'rgba(200,200,200,0.12)';
-            return (isCost ? v<=d.budget[i] : v>=d.budget[i]) ? 'rgba(26,122,69,0.75)' : 'rgba(192,57,43,0.75)';
-          }),
-          borderColor: d.actual.map((v,i) => {
-            if (v === null) return 'rgba(180,180,180,0.3)';
-            return (isCost ? v<=d.budget[i] : v>=d.budget[i]) ? 'rgba(26,122,69,1)' : 'rgba(192,57,43,1)';
-          }),
-          borderWidth: 1, order: 1
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: { position: 'top', labels: { font: { size: 11 } } },
-        tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.raw!==null ? c.raw.toLocaleString('ja-JP')+'千円' : '未確定'}` } }
-      },
-      scales: { y: { beginAtZero: false, ticks: { callback: v => v.toLocaleString('ja-JP') } } }
-    }
+// Chart 2: 一般原価
+new Chart(document.getElementById('chart-cost').getContext('2d'),{
+  type:'bar',
+  data:{labels:months,datasets:[
+    {label:'燃料費',data:cost_nenryo_act,backgroundColor:'rgba(52,152,219,0.75)',borderColor:'rgba(41,128,185,1)',borderWidth:1,stack:'a'},
+    {label:'交通費',data:cost_kotsu_act, backgroundColor:'rgba(46,204,113,0.75)',borderColor:'rgba(39,174,96,1)', borderWidth:1,stack:'a'},
+    {label:'車両費',data:cost_sharyo_act,backgroundColor:'rgba(155,89,182,0.75)',borderColor:'rgba(142,68,173,1)',borderWidth:1,stack:'a'},
+    {label:'人件費',data:cost_jinken_act,backgroundColor:'rgba(230,126,34,0.75)',borderColor:'rgba(211,84,0,1)',  borderWidth:1,stack:'a'},
+    {label:'保険料',data:cost_hoken_act, backgroundColor:'rgba(231,76,60,0.75)', borderColor:'rgba(192,57,43,1)',borderWidth:1,stack:'a'},
+    {type:'line',label:'原価合計 予算',data:ippan_cost_bud,backgroundColor:'transparent',borderColor:'rgba(26,58,92,0.7)',borderWidth:2,borderDash:[5,5],pointRadius:4,tension:0.3,spanGaps:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:tipFmt}}},scales:{y:{beginAtZero:true,stacked:true,ticks:{callback:v=>v.toLocaleString('ja-JP')}}}}
+});
+
+// 一般原価 テーブル
+(function(){
+  const tb=document.getElementById('tb-cost');
+  const acts=[cost_nenryo_act,cost_kotsu_act,cost_sharyo_act,cost_jinken_act,cost_hoken_act];
+  const buds=[cost_nenryo_bud,cost_kotsu_bud,cost_sharyo_bud,cost_jinken_bud,cost_hoken_bud];
+  months.forEach((m,i)=>{
+    const vals=acts.map(a=>a[i]);
+    const hasAny=vals.some(v=>v!==null);
+    const total_a=hasAny?vals.reduce((s,v)=>s+(v||0),0):null;
+    const total_b=ippan_cost_bud[i];
+    const cells=vals.map(v=>`<td>${fmt(v)}</td>`).join('');
+    tb.insertAdjacentHTML('beforeend',`<tr><td>${m}</td>${cells}<td><strong>${fmt(total_a)}</strong></td><td>${fmt(total_b)}</td><td>${badgeCost(total_a,total_b)}</td></tr>`);
   });
-}
+})();
 
-fillTable('tb-ippan',   data.ippan,   false);
-fillTable('tb-riyo',    data.riyo,    false);
-fillTable('tb-gaichuu', data.gaichuu, true);
-makeChart('chart-ippan',   data.ippan,   false);
-makeChart('chart-riyo',    data.riyo,    false);
-makeChart('chart-gaichuu', data.gaichuu, true);
+// Chart 3: 利用売上・粗利
+new Chart(document.getElementById('chart-riyo').getContext('2d'),{
+  data:{labels:months,datasets:[
+    {type:'bar',label:'利用売上 予算',data:riyo_sales_bud,backgroundColor:'rgba(26,58,92,0.18)',borderColor:'rgba(26,58,92,0.5)',borderWidth:1,yAxisID:'y'},
+    {type:'bar',label:'利用売上 実績',data:riyo_sales_act,backgroundColor:acC(riyo_sales_act,riyo_sales_bud),borderColor:acB(riyo_sales_act,riyo_sales_bud),borderWidth:1,yAxisID:'y'},
+    {type:'bar',label:'利用外注費 実績',data:riyo_cost_act,backgroundColor:'rgba(180,180,180,0.45)',borderColor:'rgba(130,130,130,0.8)',borderWidth:1,yAxisID:'y'},
+    {type:'line',label:'利用粗利 実績',data:riyo_gross_act,borderColor:'#8e44ad',backgroundColor:'rgba(142,68,173,0.1)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#8e44ad',order:1,yAxisID:'y',tension:0.3,spanGaps:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:tipFmt}}},scales:{y:{beginAtZero:false,ticks:{callback:v=>v.toLocaleString('ja-JP')}}}}
+});
+
+// 利用売上・粗利 テーブル
+(function(){
+  const tb=document.getElementById('tb-riyo');
+  months.forEach((m,i)=>{
+    const sa=riyo_sales_act[i],sb=riyo_sales_bud[i],ca=riyo_cost_act[i],cb=riyo_cost_bud[i],ga=riyo_gross_act[i],gb=riyo_gross_bud[i];
+    const gaStr = ga!==null ? (ga<0 ? `<span style="color:#c0392b">▲${Math.abs(ga).toLocaleString('ja-JP')}</span>` : fmt(ga)) : '—';
+    const TARGET_RPR = 0.067;
+    const rprVal = ga!==null&&sa&&sa>0 ? ga/sa : null;
+    const rprStr = rprVal!==null ? (rprVal*100).toFixed(1)+'%' : '—';
+    const rprColor = rprVal===null ? '#888' : rprVal>=TARGET_RPR ? '#1a7a45' : rprVal>=0 ? '#e67e22' : '#c0392b';
+    const rprBadge = rprVal!==null
+      ? (rprVal>=TARGET_RPR
+          ? `<span class="badge b-ok">✅ ${(rprVal*100).toFixed(1)}%</span>`
+          : rprVal>=0
+            ? `<span class="badge b-ng">${(rprVal*100).toFixed(1)}% <small>目標▲${((TARGET_RPR-rprVal)*100).toFixed(1)}pt</small></span>`
+            : `<span class="badge b-ng">▲赤字 ${(rprVal*100).toFixed(1)}%</span>`)
+      : '<span class="badge b-na">未確定</span>';
+    tb.insertAdjacentHTML('beforeend',`<tr>
+      <td>${m}</td>
+      <td>${fmt(sb)}</td><td>${fmt(sa)}</td>
+      <td>${gaStr}</td>
+      <td>${rprBadge}</td>
+    </tr>`);
+  });
+})();
 </script>
 </body>
 </html>
