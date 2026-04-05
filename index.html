@@ -100,8 +100,9 @@
 <header>
   <h1>&#128202; フロンタル 予算実績ダッシュボード 2026</h1>
   <div class="meta">
-    最終更新: 2026年4月5日（日）23:30<br>
-    データソース: DriveDoor（2026/01/01〜04/05取得）／予算: 20260403修正予算.xlsx
+    最終更新: 2026年4月6日（月）<br>
+    データソース: DriveDoor（2026/01/01〜04/05取得）／予算: 20260403修正予算.xlsx<br>
+    ※ FJS振替ルール修正: FJS自社→一般売上加算、FJS傭車はシクロシュプリーム分のみ利用売上に計上、京都傭車は保留
   </div>
 </header>
 
@@ -119,35 +120,35 @@
       </div>
     </div>
     <div class="kpi-row">
-      <div class="kpi red">
+      <div class="kpi green">
         <div class="kpi-label">一般売上（1〜3月 確定）</div>
-        <div class="kpi-val">115,424<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-val">130,522<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
         <div class="kpi-sub">予算 134,060千円</div>
-        <div class="kpi-rate t-red">達成率 86.1%</div>
-        <div class="bar-bg"><div class="bar-fg c-red" style="width:86.1%"></div></div>
+        <div class="kpi-rate t-green">達成率 97.4%</div>
+        <div class="bar-bg"><div class="bar-fg c-green" style="width:97.4%"></div></div>
       </div>
-      <div class="kpi warn kpi-incomplete">
+      <div class="kpi green kpi-incomplete">
         <div class="incomplete-tag">⚠ 3月原価未入力 — 暫定値</div>
         <div class="kpi-label">一般粗利（1〜2月確定のみ）</div>
-        <div class="kpi-val">9,956<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
-        <div class="kpi-sub">予算 17,886千円（1-2月分） | 達成率 55.7%</div>
-        <div class="kpi-rate t-red">粗利率: 1月 15.4% / 2月 10.7%</div>
-        <div class="bar-bg"><div class="bar-fg c-red" style="width:55.7%"></div></div>
+        <div class="kpi-val">19,427<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-sub">予算 17,886千円（1-2月分） | 達成率 108.6%</div>
+        <div class="kpi-rate t-green">粗利率: 1月 25.0% / 2月 20.4%</div>
+        <div class="bar-bg"><div class="bar-fg c-green" style="width:100%"></div></div>
         <div class="note" style="color:#a06000;">3月の原価入力後に再集計が必要です</div>
       </div>
-      <div class="kpi green">
+      <div class="kpi red">
         <div class="kpi-label">利用貨物粗利（1〜3月 確定）</div>
-        <div class="kpi-val">29,229<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-val">2,613<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
         <div class="kpi-sub">予算 3,258千円（1,086×3ヶ月）</div>
-        <div class="kpi-rate t-green">粗利率: 1月 30.9% / 2月 28.7% / 3月 27.3%</div>
-        <div class="bar-bg"><div class="bar-fg c-green" style="width:100%"></div></div>
+        <div class="kpi-rate t-red">粗利率: 1月 3.5% / 2月 6.7% / 3月 7.9%</div>
+        <div class="bar-bg"><div class="bar-fg c-red" style="width:80.2%"></div></div>
       </div>
       <div class="kpi green kpi-incomplete">
         <div class="incomplete-tag">⚠ 3月原価未入力 — 暫定値</div>
         <div class="kpi-label">粗利計（1〜2月確定のみ）</div>
-        <div class="kpi-val">31,818<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-val">20,918<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
         <div class="kpi-sub">予算 20,058千円（1-2月分）</div>
-        <div class="kpi-rate t-green">達成率 158.6%</div>
+        <div class="kpi-rate t-green">達成率 104.3%</div>
         <div class="bar-bg"><div class="bar-fg c-green" style="width:100%"></div></div>
         <div class="note" style="color:#a06000;">3月の原価入力後に再集計が必要です</div>
       </div>
@@ -200,12 +201,12 @@
 <script>
 const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const nn=null;
-const ippan_sales_act=[37755,38424,39245,434,nn,nn,nn,nn,nn,nn,nn,nn];
+const ippan_sales_act=[42569,43081,44872,434,nn,nn,nn,nn,nn,nn,nn,nn];
 const ippan_cost_act =[31930,34293,1411,nn,nn,nn,nn,nn,nn,nn,nn,nn];
-const ippan_gross_act=[5825,4131,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
-const riyo_sales_act =[35252,38164,27027,0,nn,nn,nn,nn,nn,nn,nn,nn];
-const riyo_cost_act  =[24354,27200,19660,0,nn,nn,nn,nn,nn,nn,nn,nn];
-const riyo_gross_act =[10898,10964,7367,0,nn,nn,nn,nn,nn,nn,nn,nn];
+const ippan_gross_act=[10639,8788,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const riyo_sales_act =[12187,16036,14125,0,nn,nn,nn,nn,nn,nn,nn,nn];
+const riyo_cost_act  =[11766,14966,13003,0,nn,nn,nn,nn,nn,nn,nn,nn];
+const riyo_gross_act =[421,1070,1122,0,nn,nn,nn,nn,nn,nn,nn,nn];
 const cost_nenryo_act=[9039,9844,471,nn,nn,nn,nn,nn,nn,nn,nn,nn];
 const cost_kotsu_act =[3952,4132,0,nn,nn,nn,nn,nn,nn,nn,nn,nn];
 const cost_sharyo_act=[1901,4190,0,nn,nn,nn,nn,nn,nn,nn,nn,nn];
