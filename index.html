@@ -100,8 +100,8 @@
 <header>
   <h1>&#128202; フロンタル 予算実績ダッシュボード 2026</h1>
   <div class="meta">
-    最終更新: 2026年4月4日<br>
-    データソース: DriveDoor（2026/01/01〜04/03取得）／予算: 20260403修正予算.xlsx
+    最終更新: 2026年4月5日（日）23:30<br>
+    データソース: DriveDoor（2026/01/01〜04/05取得）／予算: 20260403修正予算.xlsx
   </div>
 </header>
 
@@ -113,42 +113,41 @@
     <div class="alert-banner">
       <div class="alert-icon">⚠️</div>
       <div class="alert-body">
-        <strong>3月分の一般原価が未入力のため、一般粗利・粗利計は 1〜2月の確定値のみです</strong>
-        DriveDoor への燃料費・交通費・車両費・人件費の入力が完了していません。3月分の原価が入力され次第、数値が更新されます。<br>
+        <strong>3月分の一般原価が大部分未入力のため、一般粗利・粗利計は 1〜2月の確定値のみです</strong>
+        DriveDoor への交通費・車両費・人件費の入力が完了していません。3月は燃料費(471千円)と保険料(940千円)のみ確定。<br>
         ※ 一般売上は1〜3月合計（確定）／利用貨物粗利は1〜3月合計（確定）
       </div>
     </div>
     <div class="kpi-row">
-      <div class="kpi warn">
+      <div class="kpi red">
         <div class="kpi-label">一般売上（1〜3月 確定）</div>
-        <div class="kpi-val">129,631<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-val">115,424<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
         <div class="kpi-sub">予算 134,060千円</div>
-        <div class="kpi-rate t-warn">達成率 96.7%</div>
-        <div class="bar-bg"><div class="bar-fg c-warn" style="width:96.7%"></div></div>
+        <div class="kpi-rate t-red">達成率 86.1%</div>
+        <div class="bar-bg"><div class="bar-fg c-red" style="width:86.1%"></div></div>
       </div>
-      <div class="kpi green kpi-incomplete">
+      <div class="kpi warn kpi-incomplete">
         <div class="incomplete-tag">⚠ 3月原価未入力 — 暫定値</div>
         <div class="kpi-label">一般粗利（1〜2月確定のみ）</div>
-        <div class="kpi-val">19,428<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
-        <div class="kpi-sub">予算 17,886千円（1-2月分） | 達成率 108.6% ✅</div>
-        <div class="kpi-rate t-green">粗利率: 1月 25.0% / 2月 20.4%</div>
-        <div class="bar-bg"><div class="bar-fg c-green" style="width:100%"></div></div>
+        <div class="kpi-val">9,956<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-sub">予算 17,886千円（1-2月分） | 達成率 55.7%</div>
+        <div class="kpi-rate t-red">粗利率: 1月 15.4% / 2月 10.7%</div>
+        <div class="bar-bg"><div class="bar-fg c-red" style="width:55.7%"></div></div>
         <div class="note" style="color:#a06000;">3月の原価入力後に再集計が必要です</div>
       </div>
-      <div class="kpi red">
+      <div class="kpi green">
         <div class="kpi-label">利用貨物粗利（1〜3月 確定）</div>
-        <div class="kpi-val" style="color:#c0392b">▲3,181<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-val">29,229<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
         <div class="kpi-sub">予算 3,258千円（1,086×3ヶ月）</div>
-        <div class="kpi-rate t-red">粗利率: 1月 2.9% / 2月 4.7% / 3月 ▲59.8%</div>
-        <div class="bar-bg"><div class="bar-fg c-red" style="width:100%"></div></div>
-        <div class="note">※3月 利用売上7,745 vs 外注費12,377（要確認）</div>
+        <div class="kpi-rate t-green">粗利率: 1月 30.9% / 2月 28.7% / 3月 27.3%</div>
+        <div class="bar-bg"><div class="bar-fg c-green" style="width:100%"></div></div>
       </div>
       <div class="kpi green kpi-incomplete">
         <div class="incomplete-tag">⚠ 3月原価未入力 — 暫定値</div>
         <div class="kpi-label">粗利計（1〜2月確定のみ）</div>
-        <div class="kpi-val">20,879<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
-        <div class="kpi-sub">予算 18,186千円（1-2月分）</div>
-        <div class="kpi-rate t-green">達成率 114.8% ✅</div>
+        <div class="kpi-val">31,818<small style="font-size:0.6em;font-weight:400"> 千円</small></div>
+        <div class="kpi-sub">予算 20,058千円（1-2月分）</div>
+        <div class="kpi-rate t-green">達成率 158.6%</div>
         <div class="bar-bg"><div class="bar-fg c-green" style="width:100%"></div></div>
         <div class="note" style="color:#a06000;">3月の原価入力後に再集計が必要です</div>
       </div>
@@ -162,7 +161,7 @@
       <th>月</th><th>一般売上 予算</th><th>一般売上 実績</th><th>売上達成率</th>
       <th>一般原価 予算</th><th>一般原価 実績</th><th>一般粗利 予算</th><th>一般粗利 実績</th><th>一般粗利率</th>
     </tr></thead><tbody id="tb-ippan"></tbody></table></div>
-    <p class="note">※一般原価=燃料費+交通費+車両費+人件費+保険料。3月は保険料940千円のみ確定、他は未入力</p>
+    <p class="note">※一般原価=燃料費+交通費+車両費+人件費+保険料。3月は燃料費471千円・保険料940千円のみ確定、他は未入力</p>
   </div>
   <!-- 一般原価 -->
   <div class="section">
@@ -171,7 +170,7 @@
     <div class="table-wrap"><table><thead><tr>
       <th>月</th><th>燃料費</th><th>交通費</th><th>車両費</th><th>人件費</th><th>保険料</th><th>原価合計</th><th>予算合計</th><th>状態</th>
     </tr></thead><tbody id="tb-cost"></tbody></table></div>
-    <p class="note">※車両費=オイル+タイヤ+修繕費+固定車両費。3月は保険料940千円のみ確定。燃料費・交通費・車両費・人件費はDriveDoor未入力</p>
+    <p class="note">※車両費=オイル+タイヤ+修繕費+固定車両費。3月は燃料費471千円・保険料940千円のみ確定。交通費・車両費・人件費はDriveDoor未入力</p>
   </div>
   <!-- 利用売上・粗利 -->
   <div class="section">
@@ -180,7 +179,7 @@
     <div class="table-wrap"><table><thead><tr>
       <th>月</th><th>利用売上 予算</th><th>利用売上 実績</th><th>利用粗利 実績</th><th>利用粗利率（目標 6.7%）</th>
     </tr></thead><tbody id="tb-riyo"></tbody></table></div>
-    <p class="note">※利用粗利=利用売上−利用外注費。3月は利用売上7,745千円に対し外注費12,377千円で▲4,632千円</p>
+    <p class="note">※利用粗利=利用売上−利用外注費。1〜3月とも利用粗利率27〜31%で推移</p>
   </div>
   <!-- CF -->
   <div class="section">
@@ -201,16 +200,16 @@
 <script>
 const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const nn=null;
-const ippan_sales_act=[42569,43081,43981,334,nn,nn,nn,nn,nn,nn,nn,nn];
-const ippan_cost_act =[31930,34292,940,nn,nn,nn,nn,nn,nn,nn,nn,nn];
-const ippan_gross_act=[10639,8789,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
-const riyo_sales_act =[16817,20562,7745,0,nn,nn,nn,nn,nn,nn,nn,nn];
-const riyo_cost_act  =[16323,19605,12377,0,nn,nn,nn,nn,nn,nn,nn,nn];
-const riyo_gross_act =[494,957,-4632,0,nn,nn,nn,nn,nn,nn,nn,nn];
-const cost_nenryo_act=[9039,9844,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
-const cost_kotsu_act =[3952,4132,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
-const cost_sharyo_act=[1901,4190,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
-const cost_jinken_act=[16410,15499,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const ippan_sales_act=[37755,38424,39245,434,nn,nn,nn,nn,nn,nn,nn,nn];
+const ippan_cost_act =[31930,34293,1411,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const ippan_gross_act=[5825,4131,nn,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const riyo_sales_act =[35252,38164,27027,0,nn,nn,nn,nn,nn,nn,nn,nn];
+const riyo_cost_act  =[24354,27200,19660,0,nn,nn,nn,nn,nn,nn,nn,nn];
+const riyo_gross_act =[10898,10964,7367,0,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_nenryo_act=[9039,9844,471,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_kotsu_act =[3952,4132,0,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_sharyo_act=[1901,4190,0,nn,nn,nn,nn,nn,nn,nn,nn,nn];
+const cost_jinken_act=[16410,15499,0,nn,nn,nn,nn,nn,nn,nn,nn,nn];
 const cost_hoken_act =[628,628,940,nn,nn,nn,nn,nn,nn,nn,nn,nn];
 // 予算：1-2月は手順書の値、3月以降は20260403修正予算.xlsxより
 const ippan_sales_bud=[40260,41100,52700,55550,52000,58850,62850,56800,62850,62850,62850,56800];
