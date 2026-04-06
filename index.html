@@ -300,13 +300,13 @@ new Chart(document.getElementById('chart-ippan').getContext('2d'),{data:{labels:
     datasets.push({label:c.label+' 予算',data:c.bud,backgroundColor:c.bgB,borderColor:c.bd,borderWidth:1,stack:'bud'});
     datasets.push({label:c.label+' 実績',data:c.act,backgroundColor:c.bgA,borderColor:c.bd,borderWidth:1,stack:'act'});
   });
-  datasets.push({type:'line',label:'合計 予算',data:totalBud,borderColor:'rgba(26,58,92,0.6)',borderDash:[5,5],borderWidth:2,pointRadius:3,backgroundColor:'transparent',tension:0.3,stack:false});
-  datasets.push({type:'line',label:'合計 実績',data:totalAct,borderColor:'#1a3a5c',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#1a3a5c',backgroundColor:'transparent',tension:0.3,spanGaps:false,stack:false});
+  datasets.push({type:'line',label:'合計 予算',data:totalBud,borderColor:'rgba(26,58,92,0.6)',borderDash:[5,5],borderWidth:2,pointRadius:3,backgroundColor:'transparent',tension:0.3,yAxisID:'y2'});
+  datasets.push({type:'line',label:'合計 実績',data:totalAct,borderColor:'#1a3a5c',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#1a3a5c',backgroundColor:'transparent',tension:0.3,spanGaps:false,yAxisID:'y2'});
 
   new Chart(document.getElementById('chart-cost').getContext('2d'),{type:'bar',data:{labels:months,datasets:datasets},options:{
     responsive:true,maintainAspectRatio:false,
     plugins:{legend:{position:'top',labels:{font:{size:10},filter:item=>!item.text.includes('予算')||item.text.includes('合計')}},tooltip:{callbacks:{label:tipFmt}}},
-    scales:{y:{stacked:true,beginAtZero:true,ticks:{callback:v=>v.toLocaleString('ja-JP')}},x:{stacked:true}}
+    scales:{y:{stacked:true,beginAtZero:true,ticks:{callback:v=>v.toLocaleString('ja-JP')}},x:{stacked:true},y2:{position:'right',beginAtZero:true,ticks:{callback:v=>v.toLocaleString('ja-JP')},grid:{drawOnChartArea:false},title:{display:true,text:'合計(千円)',font:{size:10}}}}
   }});
 
   // 経費テーブル
