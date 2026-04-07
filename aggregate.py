@@ -144,9 +144,9 @@ def round_sen(value):
 
 def main():
     # --- 日報読み取り ---
-    honsha = read_nippo(DATA_DIR / "日報一覧_本社_20260405.xlsx", "honsha")
-    kyoto = read_nippo(DATA_DIR / "日報一覧_京都_20260405.xlsx", "kyoto")
-    fjs = read_nippo(DATA_DIR / "日報一覧_FJS_20260405.xlsx", "fjs")
+    honsha = read_nippo(DATA_DIR / "nippo_honsha.xlsx", "honsha")
+    kyoto = read_nippo(DATA_DIR / "nippo_kyoto.xlsx", "kyoto")
+    fjs = read_nippo(DATA_DIR / "nippo_fjs.xlsx", "fjs")
 
     # --- 集約: 全事業所のippan/riyoを合算 ---
     # 一般(ippan) = 本社自社 + 京都自社 + FJS自社
@@ -188,7 +188,7 @@ def main():
             riyo_gross_act.append(None)
 
     # --- 車両経費CSV読み取り ---
-    sharyo_costs = read_sharyo_keihi(DATA_DIR / "車両経費一覧_20260405.csv")
+    sharyo_costs = read_sharyo_keihi(DATA_DIR / "sharyokeihi.csv")
 
     cost_nenryo_act = []
     cost_kotsu_act = []
