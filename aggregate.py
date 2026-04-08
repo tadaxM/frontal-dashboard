@@ -68,10 +68,12 @@ def read_nippo(filepath, office_type):
             else:
                 category = 'ippan'  # 自社 or その他 → 一般
 
-        # Col CG (index 84): 請求金額
-        sales = row[84] if len(row) > 84 else None
-        # Col CN (index 91): 支払金額
-        cost = row[91] if len(row) > 91 else None
+        # 請求金額 (index 89) / 支払金額 (index 100)
+        # ※DriveDoorのExcel出力は列数が変動する場合があるため、
+        #   ヘッダー行から動的に取得するのが望ましいが、現時点ではindex固定
+        sales = row[89] if len(row) > 89 else None
+        # 支払金額
+        cost = row[100] if len(row) > 100 else None
 
         sales = float(sales) if sales is not None else 0
         cost = float(cost) if cost is not None else 0
