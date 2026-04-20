@@ -378,6 +378,15 @@ set_col_widths(ws5, [15, 14, 14, 12, 14])
 
 
 # --- 保存 ---
-out_path = BASE / "reports" / f"frontal_report_{datetime.now().strftime('%Y%m%d')}.xlsx"
+# 出力先: Dropbox の outbox フォルダ
+OUTBOX = Path.home() / "Dropbox" / "kuroda_work" / "outbox"
+OUTBOX.mkdir(parents=True, exist_ok=True)
+out_path = OUTBOX / f"frontal_report_{datetime.now().strftime('%Y%m%d')}.xlsx"
 wb.save(out_path)
 print(f"Excel report saved: {out_path}")
+
+# バックアップとして reports/ にも保存
+backup_path = BASE / "reports" / f"frontal_report_{datetime.now().strftime('%Y%m%d')}.xlsx"
+backup_path.parent.mkdir(parents=True, exist_ok=True)
+wb.save(backup_path)
+print(f"Backup saved: {backup_path}")
