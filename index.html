@@ -53,7 +53,7 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <h1>フロンタル 予算実績ダッシュボード</h1>
   <div class="subtitle">Budget vs Actual Dashboard — 2026年度</div>
 </header>
-<div class="update-info">最終更新: <span id="updateDate"></span> ｜ データ取得日: 2026/04/14（DriveDoor最新値）</div>
+<div class="update-info">最終更新: <span id="updateDate"></span> ｜ データ取得日: 2026/04/20（DriveDoor最新値）</div>
 
 <div class="alert-banner">
   <strong>⚠ 4月は月中速報値 / 3月原価データ更新済み</strong>
@@ -83,8 +83,8 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
 <div class="section">
   <h2>④ キャッシュフロー（概算）</h2>
   <div class="cf-box">
-    <strong>固定費 CF_FIXED = −16,000千円/月</strong>（固定費6,000 + リース7,000 + 金融3,000）<br>
-    月次CF = 一般粗利 + 利用粗利 − 16,000
+    <strong>固定費 CF_FIXED = −16,500千円/月</strong>（固定費6,000 + リース7,500 + 金融3,000）<br>
+    月次CF = 一般粗利 + 利用粗利 − 16,500
   </div>
   <div class="chart-outer"><div class="chart-scroll"><canvas id="chartCF"></canvas></div></div>
   <table id="tableCF"></table>
@@ -100,18 +100,18 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
 
 <script>
 // ======================================================
-// DATA  2026-04-14更新 FJS振替ルール適用済
+// DATA  2026-04-20更新 FJS振替ルール適用済
 // ======================================================
 const M = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const CONFIRMED = [0,1,2];   // 1〜3月確定
 const PARTIAL   = [3];       // 4月速報
 
 // 一般売上 [千円]
-const ippan_sales_act = [42569,43081,53018,7740,null,null,null,null,null,null,null,null];
+const ippan_sales_act = [42569,43081,53018,24431,null,null,null,null,null,null,null,null];
 const ippan_sales_bud = [40260,41100,52700,55550,52000,58850,62850,56800,62850,62850,62850,56800];
 
 // 一般原価 [千円]
-const ippan_cost_act  = [31930,34292,37146,null,null,null,null,null,null,null,null,null];
+const ippan_cost_act  = [31930,34368,43111,null,null,null,null,null,null,null,null,null];
 const ippan_cost_bud  = [31055,32419,40040,42303,39457,45086,48168,43105,48168,48168,48168,43105];
 
 // 一般粗利
@@ -119,19 +119,19 @@ const ippan_gross_act = ippan_sales_act.map((s,i)=>s!==null&&ippan_cost_act[i]!=
 const ippan_gross_bud = ippan_sales_bud.map((s,i)=>s-ippan_cost_bud[i]);
 
 // 利用売上・外注費 [千円]
-const riyo_sales_act  = [12187,16036,14048,2228,null,null,null,null,null,null,null,null];
+const riyo_sales_act  = [12187,16036,14049,8867,null,null,null,null,null,null,null,null];
 const riyo_sales_bud  = [16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100];
-const riyo_cost_act   = [11766,14966,12977,2193,null,null,null,null,null,null,null,null];
+const riyo_cost_act   = [11766,14966,12978,8280,null,null,null,null,null,null,null,null];
 const riyo_cost_bud   = [15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014];
 const riyo_gross_act  = riyo_sales_act.map((s,i)=>s!==null&&riyo_cost_act[i]!==null?s-riyo_cost_act[i]:null);
 const riyo_gross_bud  = riyo_sales_bud.map((s,i)=>s-riyo_cost_bud[i]);
 
 // 費目別原価 [千円]
-const cost_nenryo_act = [9039,9843,12450,null,null,null,null,null,null,null,null,null];
-const cost_kotsu_act  = [3951,4132,0,null,null,null,null,null,null,null,null,null];
-const cost_sharyo_act = [1901,4189,2287,null,null,null,null,null,null,null,null,null];
-const cost_jinken_act = [16410,15498,21468,null,null,null,null,null,null,null,null,null];
-const cost_hoken_act  = [627,627,939,null,null,null,null,null,null,null,null,null];
+const cost_nenryo_act = [9039,9844,12450,null,null,null,null,null,null,null,null,null];
+const cost_kotsu_act  = [3952,4132,4852,null,null,null,null,null,null,null,null,null];
+const cost_sharyo_act = [1901,4190,3735,null,null,null,null,null,null,null,null,null];
+const cost_jinken_act = [16410,15499,21371,null,null,null,null,null,null,null,null,null];
+const cost_hoken_act  = [628,703,703,null,null,null,null,null,null,null,null,null];
 
 const cost_nenryo_bud = [9710,9830,13110,13890,12060,14470,15290,12840,15290,15290,15290,12840];
 const cost_kotsu_bud  = [4405,4405,5015,5295,5545,5595,6015,6015,6015,6015,6015,6015];
@@ -139,7 +139,7 @@ const cost_sharyo_bud = [2250,2250,2270,2380,2550,2590,2780,2780,2780,2780,2780,
 const cost_jinken_bud = [14082,15316,18722,19755,18282,21414,23003,20370,23003,23003,23003,20370];
 const cost_hoken_bud  = [608,618,923,983,1020,1017,1080,1100,1080,1080,1080,1100];
 
-const CF_FIXED = -16000;
+const CF_FIXED = -16500;
 
 // ======================================================
 // UTILS
