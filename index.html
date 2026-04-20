@@ -316,19 +316,19 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
 // TABLE: 利用売上
 // ======================================================
 (()=>{
-  let h=`<thead><tr><th>月</th><th>売上 実績</th><th>売上 予算</th><th>差異</th><th>達成率</th><th>外注費 実績</th><th>粗利 実績</th><th>粗利 予算</th></tr></thead><tbody>`;
+  let h=`<thead><tr><th>月</th><th>売上 予算</th><th>売上 実績</th><th>差異</th><th>達成率</th><th>外注費 実績</th><th>粗利 予算</th><th>粗利 実績</th></tr></thead><tbody>`;
   M.forEach((m,i)=>{
     const sa=riyo_sales_act[i],sb=riyo_sales_bud[i],ca=riyo_cost_act[i],ga=riyo_gross_act[i],gb=riyo_gross_bud[i];
     const diff=sa!==null?sa-sb:null;
     const p=PARTIAL.includes(i);
     h+=`<tr><td>${m}</td>
-    <td class="${p?'incomplete':''}">${fmt(sa)}${p?' ⚡':''}</td>
     <td>${fmt(sb)}</td>
+    <td class="${p?'incomplete':''}">${fmt(sa)}${p?' ⚡':''}</td>
     <td class="${diffCls(diff)}">${diff!==null?(diff>=0?'+':'')+fmt(diff):'—'}</td>
     <td>${rateBadge(sa,sb)}</td>
     <td>${fmt(ca)}</td>
-    <td>${fmt(ga)}</td>
-    <td>${fmt(gb)}</td></tr>`;
+    <td>${fmt(gb)}</td>
+    <td>${fmt(ga)}</td></tr>`;
   });
   document.getElementById('tableRiyo').innerHTML=h+'</tbody>';
 })();
@@ -337,7 +337,7 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
 // TABLE: CF
 // ======================================================
 (()=>{
-  let h=`<thead><tr><th>月</th><th>一般粗利</th><th>利用粗利</th><th>粗利合計</th><th>固定費</th><th>CF 実績</th><th>CF 予算</th></tr></thead><tbody>`;
+  let h=`<thead><tr><th>月</th><th>一般粗利</th><th>利用粗利</th><th>粗利合計</th><th>固定費</th><th>CF 予算</th><th>CF 実績</th></tr></thead><tbody>`;
   M.forEach((m,i)=>{
     const ig=ippan_gross_act[i],rg=riyo_gross_act[i];
     const g=ig!==null&&rg!==null?ig+rg:null;
@@ -345,8 +345,8 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
     const cfb=ippan_gross_bud[i]+riyo_gross_bud[i]+CF_FIXED;
     h+=`<tr><td>${m}</td><td>${fmt(ig)}</td><td>${fmt(rg)}</td>
     <td>${fmt(g)}</td><td>${fmt(CF_FIXED)}</td>
-    <td class="${cf===null?'neutral':cf>=0?'positive':'negative'}">${fmt(cf)}</td>
-    <td class="${cfb>=0?'':'negative'}">${fmt(cfb)}</td></tr>`;
+    <td class="${cfb>=0?'':'negative'}">${fmt(cfb)}</td>
+    <td class="${cf===null?'neutral':cf>=0?'positive':'negative'}">${fmt(cf)}</td></tr>`;
   });
   document.getElementById('tableCF').innerHTML=h+'</tbody>';
 })();
