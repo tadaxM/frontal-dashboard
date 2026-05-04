@@ -53,11 +53,11 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <h1>フロンタル 予算実績ダッシュボード</h1>
   <div class="subtitle">Budget vs Actual Dashboard — 2026年度</div>
 </header>
-<div class="update-info">最終更新: <span id="updateDate"></span> ｜ データ取得日: 2026/04/28（DriveDoor最新値）</div>
+<div class="update-info">最終更新: <span id="updateDate"></span> ｜ データ取得日: 2026/05/04（DriveDoor最新値）</div>
 
 <div class="alert-banner">
-  <strong>⚠ 4月は月中速報値 / 3月原価データ更新済み</strong>
-  4月実績は速報値（本社〜4/14、FJS〜4/7）。3月一般原価が確定し前回より大幅更新。
+  <strong>⚡ 4月確定・5月速報（5/1〜5/4） / 3月原価が大幅更新</strong>
+  4月売上ほぼ確定（一般45,493千円 / 利用20,135千円）。3月通行料が後計上→原価43,111千円。5月は5/1〜5/4の4日分速報。
 </div>
 
 <div class="summary-cards" id="summaryCards"></div>
@@ -83,8 +83,8 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
 <div class="section">
   <h2>④ キャッシュフロー（概算）</h2>
   <div class="cf-box">
-    <strong>固定費 CF_FIXED = −16,500千円/月</strong>（固定費6,000 + リース7,500 + 金融3,000）<br>
-    月次CF = 一般粗利 + 利用粗利 − 16,500
+    <strong>固定費 CF_FIXED = −16,000千円/月</strong>（固定費6,000 + リース7,000 + 金融3,000）<br>
+    月次CF = 一般粗利 + 利用粗利 − 16,000
   </div>
   <div class="chart-outer"><div class="chart-scroll"><canvas id="chartCF"></canvas></div></div>
   <table id="tableCF"></table>
@@ -100,14 +100,14 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
 
 <script>
 // ======================================================
-// DATA  2026-04-28更新 FJS振替ルール適用済
+// DATA  2026-05-04更新 FJS振替ルール適用済
 // ======================================================
 const M = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const CONFIRMED = [0,1,2];   // 1〜3月確定
-const PARTIAL   = [3];       // 4月速報
+const PARTIAL   = [3,4];     // 4月・5月速報
 
 // 一般売上 [千円]
-const ippan_sales_act = [42569,43081,53018,38408,null,null,null,null,null,null,null,null];
+const ippan_sales_act = [42569,43081,53018,45493,580,null,null,null,null,null,null,null];
 const ippan_sales_bud = [40260,41100,52700,55550,52000,58850,62850,56800,62850,62850,62850,56800];
 
 // 一般原価 [千円]
@@ -119,9 +119,9 @@ const ippan_gross_act = ippan_sales_act.map((s,i)=>s!==null&&ippan_cost_act[i]!=
 const ippan_gross_bud = ippan_sales_bud.map((s,i)=>s-ippan_cost_bud[i]);
 
 // 利用売上・外注費 [千円]
-const riyo_sales_act  = [12187,16036,14049,16774,null,null,null,null,null,null,null,null];
+const riyo_sales_act  = [12187,16036,14049,20135,0,null,null,null,null,null,null,null];
 const riyo_sales_bud  = [16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100];
-const riyo_cost_act   = [11766,14966,12978,15895,null,null,null,null,null,null,null,null];
+const riyo_cost_act   = [11766,14966,12978,18736,0,null,null,null,null,null,null,null];
 const riyo_cost_bud   = [15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014];
 const riyo_gross_act  = riyo_sales_act.map((s,i)=>s!==null&&riyo_cost_act[i]!==null?s-riyo_cost_act[i]:null);
 const riyo_gross_bud  = riyo_sales_bud.map((s,i)=>s-riyo_cost_bud[i]);
@@ -139,7 +139,7 @@ const cost_sharyo_bud = [2250,2250,2270,2380,2550,2590,2780,2780,2780,2780,2780,
 const cost_jinken_bud = [14082,15316,18722,19755,18282,21414,23003,20370,23003,23003,23003,20370];
 const cost_hoken_bud  = [608,618,923,983,1020,1017,1080,1100,1080,1080,1080,1100];
 
-const CF_FIXED = -16500;
+const CF_FIXED = -16000;
 
 // ======================================================
 // UTILS
@@ -160,7 +160,7 @@ document.getElementById('updateDate').textContent = new Date().toLocaleString('j
 // SUMMARY CARDS
 // ======================================================
 (()=>{
-  const c = CONFIRMED;
+  const c = [0,1,2,3];  // 1〜4月（4月ほぼ確定）
   const iActSum = c.reduce((s,i)=>s+(ippan_sales_act[i]??0),0);
   const iBudSum = c.reduce((s,i)=>s+(ippan_sales_bud[i]??0),0);
   const igActSum= c.reduce((s,i)=>s+(ippan_gross_act[i]??0),0);
@@ -171,10 +171,10 @@ document.getElementById('updateDate').textContent = new Date().toLocaleString('j
   const gBudSum = igBudSum+rgBudSum;
   const ir=rate(iActSum,iBudSum), igr=rate(igActSum,igBudSum), rgr=rate(rgActSum,rgBudSum), gr=rate(gActSum,gBudSum);
   const cards=[
-    {label:'一般売上 累計 (1〜3月)',value:fmtK(iActSum),sub:`予算比 ${ir}%（予算 ${fmtK(iBudSum)}）`,color:ir>=100?'green':'orange'},
-    {label:'一般粗利 累計 (1〜3月)',value:fmtK(igActSum),sub:`予算比 ${igr}%（予算 ${fmtK(igBudSum)}）`,color:igr>=100?'green':'orange'},
-    {label:'利用粗利 累計 (1〜3月)',value:fmtK(rgActSum),sub:`予算比 ${rgr}%（予算 ${fmtK(rgBudSum)}）`,color:rgr>=100?'green':'red'},
-    {label:'粗利合計 累計 (1〜3月)',value:fmtK(gActSum),sub:`予算比 ${gr}%（予算 ${fmtK(gBudSum)}）`,color:gr>=100?'green':'orange'},
+    {label:'一般売上 累計 (1〜4月)',value:fmtK(iActSum),sub:`予算比 ${ir}%（予算 ${fmtK(iBudSum)}）`,color:ir>=100?'green':'orange'},
+    {label:'一般粗利 累計 (1〜4月)',value:fmtK(igActSum),sub:`予算比 ${igr}%（予算 ${fmtK(igBudSum)}）`,color:igr>=100?'green':'orange'},
+    {label:'利用粗利 累計 (1〜4月)',value:fmtK(rgActSum),sub:`予算比 ${rgr}%（予算 ${fmtK(rgBudSum)}）`,color:rgr>=100?'green':'red'},
+    {label:'粗利合計 累計 (1〜4月)',value:fmtK(gActSum),sub:`予算比 ${gr}%（予算 ${fmtK(gBudSum)}）`,color:gr>=100?'green':'orange'},
   ];
   const el=document.getElementById('summaryCards');
   cards.forEach(c=>{el.innerHTML+=`<div class="card ${c.color}"><div class="label">${c.label}</div><div class="value">${c.value}</div><div class="sub">${c.sub}</div></div>`;});
@@ -316,19 +316,19 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
 // TABLE: 利用売上
 // ======================================================
 (()=>{
-  let h=`<thead><tr><th>月</th><th>売上 予算</th><th>売上 実績</th><th>差異</th><th>達成率</th><th>外注費 実績</th><th>粗利 予算</th><th>粗利 実績</th></tr></thead><tbody>`;
+  let h=`<thead><tr><th>月</th><th>売上 実績</th><th>売上 予算</th><th>差異</th><th>達成率</th><th>外注費 実績</th><th>粗利 実績</th><th>粗利 予算</th></tr></thead><tbody>`;
   M.forEach((m,i)=>{
     const sa=riyo_sales_act[i],sb=riyo_sales_bud[i],ca=riyo_cost_act[i],ga=riyo_gross_act[i],gb=riyo_gross_bud[i];
     const diff=sa!==null?sa-sb:null;
     const p=PARTIAL.includes(i);
     h+=`<tr><td>${m}</td>
-    <td>${fmt(sb)}</td>
     <td class="${p?'incomplete':''}">${fmt(sa)}${p?' ⚡':''}</td>
+    <td>${fmt(sb)}</td>
     <td class="${diffCls(diff)}">${diff!==null?(diff>=0?'+':'')+fmt(diff):'—'}</td>
     <td>${rateBadge(sa,sb)}</td>
     <td>${fmt(ca)}</td>
-    <td>${fmt(gb)}</td>
-    <td>${fmt(ga)}</td></tr>`;
+    <td>${fmt(ga)}</td>
+    <td>${fmt(gb)}</td></tr>`;
   });
   document.getElementById('tableRiyo').innerHTML=h+'</tbody>';
 })();
@@ -337,7 +337,7 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
 // TABLE: CF
 // ======================================================
 (()=>{
-  let h=`<thead><tr><th>月</th><th>一般粗利</th><th>利用粗利</th><th>粗利合計</th><th>固定費</th><th>CF 予算</th><th>CF 実績</th></tr></thead><tbody>`;
+  let h=`<thead><tr><th>月</th><th>一般粗利</th><th>利用粗利</th><th>粗利合計</th><th>固定費</th><th>CF 実績</th><th>CF 予算</th></tr></thead><tbody>`;
   M.forEach((m,i)=>{
     const ig=ippan_gross_act[i],rg=riyo_gross_act[i];
     const g=ig!==null&&rg!==null?ig+rg:null;
@@ -345,8 +345,8 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
     const cfb=ippan_gross_bud[i]+riyo_gross_bud[i]+CF_FIXED;
     h+=`<tr><td>${m}</td><td>${fmt(ig)}</td><td>${fmt(rg)}</td>
     <td>${fmt(g)}</td><td>${fmt(CF_FIXED)}</td>
-    <td class="${cfb>=0?'':'negative'}">${fmt(cfb)}</td>
-    <td class="${cf===null?'neutral':cf>=0?'positive':'negative'}">${fmt(cf)}</td></tr>`;
+    <td class="${cf===null?'neutral':cf>=0?'positive':'negative'}">${fmt(cf)}</td>
+    <td class="${cfb>=0?'':'negative'}">${fmt(cfb)}</td></tr>`;
   });
   document.getElementById('tableCF').innerHTML=h+'</tbody>';
 })();
@@ -364,9 +364,9 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
     {label:'利用粗利',act:riyo_gross_act, bud:riyo_gross_bud},
   ];
   const periods=[
-    {label:'1〜3月（確定）',idx:CONFIRMED},
-    {label:'4月（速報）',   idx:PARTIAL},
-    {label:'1〜4月 累計',  idx:[...CONFIRMED,...PARTIAL]},
+    {label:'1〜4月（確定）',idx:[0,1,2,3]},
+    {label:'5月（速報）',   idx:[4]},
+    {label:'1〜5月 累計',  idx:[0,1,2,3,4]},
   ];
   let h=`<thead><tr><th>項目</th>`;
   periods.forEach(p=>h+=`<th>${p.label} 実績</th><th>予算</th><th>達成率</th>`);
