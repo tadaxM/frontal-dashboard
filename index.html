@@ -53,11 +53,11 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <h1>フロンタル 予算実績ダッシュボード</h1>
   <div class="subtitle">Budget vs Actual Dashboard — 2026年度</div>
 </header>
-<div class="update-info">最終更新: 2026-05-15<span id="updateDate"></span> ｜ データ取得日: 2026/05/15（DriveDoor最新値）</div>
+<div class="update-info">最終更新: 2026-05-19<span id="updateDate"></span> ｜ データ取得日: 2026/05/19（DriveDoor最新値）</div>
 
 <div class="alert-banner">
-  <strong>⚡ 5月速報（5/1〜5/15の半月分） / 4月確定値も5/15時点で更新</strong>
-  5月一般売上 17,798千円・利用売上 7,634千円（速報）。4月は5/15時点の確定値（一般61,538千円 / 利用36,135千円）。原価データは車両経費CSV基準のため、交通費・人件費（労務費）は別ソース集計待ち。
+  <strong>⚡ 5月速報（5/1〜5/19） / 4月確定済・原価ロジック修正</strong>
+  5月一般売上 20,826千円・利用売上 7,829千円（速報）。4月は確定値（一般61,538千円 / 利用20,336千円）。5月の一般原価は燃料費・交通費・人件費がDriveDoor未入力のため暫定値。
 </div>
 
 <div class="summary-cards" id="summaryCards"></div>
@@ -383,4 +383,7 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
   });
   document.getElementById('tableCum').innerHTML=h+'</tbody>';
 })();
-</
+
+</script>
+</body>
+</html>
