@@ -42,6 +42,13 @@ def read_nippo(filepath, office_type):
         else:
             continue
 
+        # FJSファイルは売上営業所=株式会社F・J・S 行のみ対象
+        if office_type == 'fjs':
+            sales_office = str(row[4]).strip() if len(row) > 4 and row[4] else ''
+            if 'F' not in sales_office and 'J' not in sales_office:
+                continue
+            if '株式会社F' not in sales_office:
+                continue
         # 区分判定
         haisha = str(row[7]).strip() if len(row) > 7 and row[7] else ''
         if office_type == 'fjs':
