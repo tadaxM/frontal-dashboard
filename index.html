@@ -53,11 +53,12 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <h1>フロンタル 予算実績ダッシュボード</h1>
   <div class="subtitle">Budget vs Actual Dashboard — 2026年度</div>
 </header>
-<div class="update-info">最終更新: 2026-05-29<span id="updateDate"></span> ｜ データ取得日: 2026/05/29（DriveDoor最新値）</div>
+<div class="update-info">最終更新: 2026-06-01<span id="updateDate"></span> ｜ データ取得日: 2026/06/01（DriveDoor最新値）</div>
 
 <div class="alert-banner">
-  <strong>⚡ 5月速報（5/1〜5/29分） / 4月確定値更新済み</strong>
-  5月一般売上 40,113千円・利用売上 16,647千円（速報）。4月確定（一般61,538千円 / 利用20,336千円）。5月原価は車両経費CSV未入力のためダッシュボード上はnull表示（速報売上のみ集計）。
+  <strong>⚡ 5月売上確定 / 4月利用売上を修正（二重計上是正）/ 5月原価未入力</strong>
+  5月一般売上 43,883千円・利用売上 11,141千円（売上確定）。5月の車両経費（燃料・交通・人件）はDriveDoor未入力のため一般原価はnull表示（売上のみ集計）。<br>
+  ⚠️ 4月利用売上を前回の 20,336千円 から正しいFJS振替減算式 16,010千円 に修正（FJS傭車シクロ系の二重計上を是正）。これに伴い4月・5月の利用粗利が外注費超過によりマイナス表示となっています（要確認）。
 </div>
 
 <div class="summary-cards" id="summaryCards"></div>
@@ -95,7 +96,7 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <table id="tableCum" class="cum-table"></table>
 </div>
 
-<footer>フロンタル株式会社 ｜ DriveDoor（FJS振替ルール適用済）｜ 自動生成レポート</footer>
+<footer>フロンタル株式会社 ｜ DriveDoor（FJS振替ルール適用済）｜ 自動生成レポート ｜ build 2026-06-01 04:24:10 JST</footer>
 </div>
 
 <script>
@@ -107,7 +108,7 @@ const CONFIRMED = [0,1,2,3];   // 1〜4月確定
 const PARTIAL   = [4];         // 5月速報
 
 // 一般売上 [千円]
-const ippan_sales_act = [42569,43081,53018,61542,40113,null,null,null,null,null,null,null];
+const ippan_sales_act = [42569,43081,53018,61542,43883,null,null,null,null,null,null,null];
 const ippan_sales_bud = [40260,41100,52700,55550,52000,58850,62850,56800,62850,62850,62850,56800];
 
 // 一般原価 [千円]
@@ -119,9 +120,9 @@ const ippan_gross_act = ippan_sales_act.map((s,i)=>s!==null&&ippan_cost_act[i]!=
 const ippan_gross_bud = ippan_sales_bud.map((s,i)=>s-ippan_cost_bud[i]);
 
 // 利用売上・外注費 [千円]
-const riyo_sales_act  = [12187,16036,14049,20336,16647,null,null,null,null,null,null,null];
+const riyo_sales_act  = [12187,16036,14049,16010,11141,null,null,null,null,null,null,null];
 const riyo_sales_bud  = [16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100];
-const riyo_cost_act   = [11766,14966,12978,19003,15795,null,null,null,null,null,null,null];
+const riyo_cost_act   = [11766,14966,12978,22729,14554,null,null,null,null,null,null,null];
 const riyo_cost_bud   = [15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014];
 const riyo_gross_act  = riyo_sales_act.map((s,i)=>s!==null&&riyo_cost_act[i]!==null?s-riyo_cost_act[i]:null);
 const riyo_gross_bud  = riyo_sales_bud.map((s,i)=>s-riyo_cost_bud[i]);
@@ -376,14 +377,4 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
     periods.forEach(p=>{
       const aSum=p.idx.reduce((s,i)=>s+(r.act[i]??0),0);
       const bSum=p.idx.reduce((s,i)=>s+(r.bud[i]??0),0);
-      const hasP=p.idx.some(i=>PARTIAL.includes(i));
-      h+=`<td>${fmt(bSum)}</td><td>${fmt(aSum)}${hasP?' ⚡':''}</td><td>${rateBadge(aSum,bSum,r.inv??false)}</td>`;
-    });
-    h+=`</tr>`;
-  });
-  document.getElementById('tableCum').innerHTML=h+'</tbody>';
-})();
-</script>
-</body>
-</html>
-                           
+ 
