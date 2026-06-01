@@ -377,4 +377,14 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
     periods.forEach(p=>{
       const aSum=p.idx.reduce((s,i)=>s+(r.act[i]??0),0);
       const bSum=p.idx.reduce((s,i)=>s+(r.bud[i]??0),0);
- 
+      const hasP=p.idx.some(i=>PARTIAL.includes(i));
+      h+=`<td>${fmt(bSum)}</td><td>${fmt(aSum)}${hasP?' ⚡':''}</td><td>${rateBadge(aSum,bSum,r.inv??false)}</td>`;
+    });
+    h+=`</tr>`;
+  });
+  document.getElementById('tableCum').innerHTML=h+'</tbody>';
+})();
+</script>
+</body>
+</html>
+                           
