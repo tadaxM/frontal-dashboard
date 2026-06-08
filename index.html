@@ -53,11 +53,11 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <h1>フロンタル 予算実績ダッシュボード</h1>
   <div class="subtitle">Budget vs Actual Dashboard — 2026年度</div>
 </header>
-<div class="update-info">最終更新: 2026-06-08<span id="updateDate"></span> ｜ データ取得日: 2026/06/08（DriveDoor最新値）</div>
+<div class="update-info">最終更新: 2026-06-09<span id="updateDate"></span> ｜ データ取得日: 2026/06/09（DriveDoor最新値）</div>
 
 <div class="alert-banner">
-  <strong>⚡ 5月売上 最新確定値に更新 / 5月原価（燃料・交通・人件）未入力</strong>
-  5月一般売上 50,441千円・利用売上 21,399千円・利用粗利 +1,769千円（売上確定・速報）。6月は8営業日分（一般9,893／利用1,933千円）のため月次には未反映。5月の車両経費（燃料・交通・人件）はDriveDoor未入力のため5月の一般原価・一般粗利はnull表示（売上のみ確定）。利用貨物＝本社傭車＋FJSシクロ（京都の利用貨物）で集計。
+  <strong>⚡ 5月売上 最新確定値に更新 / 5月原価（交通・人件）未入力</strong>
+  5月一般売上 53,095千円・利用売上 21,399千円・利用粗利 +1,769千円（売上確定・速報）。6月は9営業日分（一般11,626／利用2,970千円）のため月次には未反映。5月の車両経費は燃料・車両・保険は入力進行中だが交通費・人件費がDriveDoor未入力のため5月の一般原価・一般粗利はnull表示（売上のみ確定）。利用貨物＝本社傭車＋FJSシクロ（京都の利用貨物）で集計。
 </div>
 
 <div class="summary-cards" id="summaryCards"></div>
@@ -95,7 +95,7 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <table id="tableCum" class="cum-table"></table>
 </div>
 
-<footer>フロンタル株式会社 ｜ DriveDoor（FJS振替ルール適用済）｜ 自動生成レポート ｜ build 2026-06-08 07:00 JST</footer>
+<footer>フロンタル株式会社 ｜ DriveDoor（FJS振替ルール適用済）｜ 自動生成レポート ｜ build 2026-06-09 04:18 JST</footer>
 </div>
 
 <script>
@@ -107,7 +107,7 @@ const CONFIRMED = [0,1,2,3];   // 1〜4月確定
 const PARTIAL   = [4];         // 5月速報
 
 // 一般売上 [千円]
-const ippan_sales_act = [42569,43081,53018,61542,50441,null,null,null,null,null,null,null];
+const ippan_sales_act = [42569,43081,53018,61542,53095,null,null,null,null,null,null,null];
 const ippan_sales_bud = [40260,41100,52700,55550,52000,58850,62850,56800,62850,62850,62850,56800];
 
 // 一般原価 [千円]
