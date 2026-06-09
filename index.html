@@ -53,11 +53,11 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <h1>フロンタル 予算実績ダッシュボード</h1>
   <div class="subtitle">Budget vs Actual Dashboard — 2026年度</div>
 </header>
-<div class="update-info">最終更新: 2026-06-09<span id="updateDate"></span> ｜ データ取得日: 2026/06/09（DriveDoor最新値）</div>
+<div class="update-info">最終更新: 2026-06-10<span id="updateDate"></span> ｜ データ取得日: 2026/06/10（DriveDoor最新値）</div>
 
 <div class="alert-banner">
-  <strong>⚡ 5月売上 最新確定値に更新 / 5月原価（交通・人件）未入力</strong>
-  5月一般売上 53,095千円・利用売上 21,399千円・利用粗利 +1,769千円（売上確定・速報）。6月は9営業日分（一般11,626／利用2,970千円）のため月次には未反映。5月の車両経費は燃料・車両・保険は入力進行中だが交通費・人件費がDriveDoor未入力のため5月の一般原価・一般粗利はnull表示（売上のみ確定）。利用貨物＝本社傭車＋FJSシクロ（京都の利用貨物）で集計。
+  <strong>⚡ 5月売上 最新値に更新 / 外注費を支払金額列から実測 / 5月原価（交通・人件）未入力</strong>
+  5月一般売上 53,313千円・利用売上 21,399千円・利用粗利 +1,205千円（売上確定・速報）。今回より外注費を日報の支払金額列から実測（1〜4月確定値と完全一致を検証済み）。6月は10日時点のMTD（一般14,378／利用3,538千円）のため月次には未反映。5月の車両経費は燃料・車両・保険は入力進行中だが交通費・人件費がDriveDoor未入力のため5月の一般原価・一般粗利はnull表示（売上のみ確定）。利用貨物＝本社傭車＋FJSシクロ（京都の利用貨物）で集計。
 </div>
 
 <div class="summary-cards" id="summaryCards"></div>
@@ -95,19 +95,19 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <table id="tableCum" class="cum-table"></table>
 </div>
 
-<footer>フロンタル株式会社 ｜ DriveDoor（FJS振替ルール適用済）｜ 自動生成レポート ｜ build 2026-06-09 04:18 JST</footer>
+<footer>フロンタル株式会社 ｜ DriveDoor（FJS振替ルール適用済）｜ 自動生成レポート ｜ build 2026-06-10 04:26 JST</footer>
 </div>
 
 <script>
 // ======================================================
-// DATA  2026-05-26更新 FJS振替ルール適用済
+// DATA  2026-06-10更新 FJS振替ルール適用済（外注費=支払金額列実測）
 // ======================================================
 const M = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const CONFIRMED = [0,1,2,3];   // 1〜4月確定
 const PARTIAL   = [4];         // 5月速報
 
 // 一般売上 [千円]
-const ippan_sales_act = [42569,43081,53018,61542,53095,null,null,null,null,null,null,null];
+const ippan_sales_act = [42569,43081,53018,61542,53313,null,null,null,null,null,null,null];
 const ippan_sales_bud = [40260,41100,52700,55550,52000,58850,62850,56800,62850,62850,62850,56800];
 
 // 一般原価 [千円]
@@ -121,7 +121,7 @@ const ippan_gross_bud = ippan_sales_bud.map((s,i)=>s-ippan_cost_bud[i]);
 // 利用売上・外注費 [千円]
 const riyo_sales_act  = [12187,16036,14049,20336,21399,null,null,null,null,null,null,null];
 const riyo_sales_bud  = [16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100];
-const riyo_cost_act   = [11766,14966,12978,19003,19630,null,null,null,null,null,null,null];
+const riyo_cost_act   = [11766,14966,12978,19003,20194,null,null,null,null,null,null,null];
 const riyo_cost_bud   = [15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014];
 const riyo_gross_act  = riyo_sales_act.map((s,i)=>s!==null&&riyo_cost_act[i]!==null?s-riyo_cost_act[i]:null);
 const riyo_gross_bud  = riyo_sales_bud.map((s,i)=>s-riyo_cost_bud[i]);
@@ -377,12 +377,4 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
       const aSum=p.idx.reduce((s,i)=>s+(r.act[i]??0),0);
       const bSum=p.idx.reduce((s,i)=>s+(r.bud[i]??0),0);
       const hasP=p.idx.some(i=>PARTIAL.includes(i));
-      h+=`<td>${fmt(bSum)}</td><td>${fmt(aSum)}${hasP?' ⚡':''}</td><td>${rateBadge(aSum,bSum,r.inv??false)}</td>`;
-    });
-    h+=`</tr>`;
-  });
-  document.getElementById('tableCum').innerHTML=h+'</tbody>';
-})();
-</script>
-</body>
-</html>
+      h+=`<td>${fmt(bSum)}</td><td>${fmt(aSum)}$
