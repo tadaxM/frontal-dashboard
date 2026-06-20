@@ -53,11 +53,11 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <h1>フロンタル 予算実績ダッシュボード</h1>
   <div class="subtitle">Budget vs Actual Dashboard — 2026年度</div>
 </header>
-<div class="update-info">最終更新: 2026-06-19<span id="updateDate"></span> ｜ データ取得日: 2026/06/19（DriveDoor最新値）</div>
+<div class="update-info">最終更新: 2026-06-20<span id="updateDate"></span> ｜ データ取得日: 2026/06/20（DriveDoor最新値）</div>
 
 <div class="alert-banner">
-  <strong>⚡ 6月MTD更新（19日時点）/ 確定配列は前回と同一 / FJS支払欠落で外注費は確定値継承 / 5月交通費 未入力</strong>
-  確定データ（1〜5月）は前回06-17と完全同一・全項目が過去確定値とΔ0で一致。5月一般売上 57,119千円・利用売上 21,399千円・利用粗利 +1,205千円。FJSシクロの支払金額が4〜6月で全件0欠落のため外注費は実測不可、手順書に従い確定値を継承（4月19,003／5月20,194。実測13,894／15,709は過少）。6月は19日時点のMTD（一般33,323／利用12,760千円）のため月次には未反映。5月の車両経費は燃料・車両・人件・保険は計上済みだが交通費（通行料）がDriveDoor未入力のため5月の一般原価・一般粗利はnull表示（売上のみ確定）。利用貨物＝本社傭車＋FJSシクロ（京都の利用貨物）で集計。
+  <strong>⚡ 6/20更新 / 5月一般原価 確定（通行料 計上済）/ 6月はMTDのため月次未反映</strong>
+  5月の交通費（通行料 5,170千円）がDriveDoorに計上され、5月の一般原価・一般粗利が確定（一般売上 57,119／一般原価 44,209／一般粗利 12,910千円）。利用売上 21,399・利用粗利 +1,205千円（5月）。FJSシクロの支払金額が4〜6月で全件0欠落のため外注費（利用原価）は実測不可、手順書に従い確定値を継承（4月19,003／5月20,194）。6月は20日時点のMTD（一般売上 35,519千円）のため月次配列には未反映。確定データは1〜5月。一般売上＝自社配車の請求金額、利用貨物＝本社傭車＋FJSシクロで集計。
 </div>
 
 <div class="summary-cards" id="summaryCards"></div>
@@ -111,7 +111,7 @@ const ippan_sales_act = [42569,43081,53018,61542,57119,null,null,null,null,null,
 const ippan_sales_bud = [40260,41100,52700,55550,52000,58850,62850,56800,62850,62850,62850,56800];
 
 // 一般原価 [千円]
-const ippan_cost_act  = [31930,34368,43369,46364,null,null,null,null,null,null,null,null];
+const ippan_cost_act  = [31930,34368,43369,46364,44209,null,null,null,null,null,null,null];
 const ippan_cost_bud  = [31055,32419,40040,42303,39457,45086,48168,43105,48168,48168,48168,43105];
 
 // 一般粗利
@@ -128,7 +128,7 @@ const riyo_gross_bud  = riyo_sales_bud.map((s,i)=>s-riyo_cost_bud[i]);
 
 // 費目別原価 [千円]
 const cost_nenryo_act = [9039,9844,12450,12786,12623,null,null,null,null,null,null,null];
-const cost_kotsu_act  = [3952,4132,4852,5472,null,null,null,null,null,null,null,null];
+const cost_kotsu_act  = [3952,4132,4852,5472,5170,null,null,null,null,null,null,null];
 const cost_sharyo_act = [1901,4190,3735,4312,2732,null,null,null,null,null,null,null];
 const cost_jinken_act = [16410,15499,21371,22682,22513,null,null,null,null,null,null,null];
 const cost_hoken_act  = [628,703,961,1112,1171,null,null,null,null,null,null,null];
