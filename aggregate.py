@@ -3,8 +3,8 @@ import pandas as pd
 import json
 from pathlib import Path
 
-RAW_DIR = Path("/sessions/busy-dreamy-knuth/mnt/Downloads/Frontal/01_DriveDoor_Raw")
-DATE_TAG = "20260603"
+RAW_DIR = Path("/sessions/trusting-funny-ritchie/mnt/Downloads/Frontal/01_DriveDoor_Raw")
+DATE_TAG = "20260625"
 
 def load_nippo(path):
     return pd.read_excel(path, header=0)
@@ -107,7 +107,7 @@ result={
  "cost_jinken_act":to_act(cost_jinken),
  "cost_hoken_act":to_act(cost_hoken),
 }
-with open("/sessions/busy-dreamy-knuth/mnt/outputs/aggregated.json",'w',encoding='utf-8') as f:
+with open("/sessions/trusting-funny-ritchie/mnt/outputs/aggregated.json",'w',encoding='utf-8') as f:
     json.dump(result,f,ensure_ascii=False,indent=2)
 print("\n=== JSON ===")
 print(json.dumps(result,ensure_ascii=False,indent=2))

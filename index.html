@@ -53,11 +53,11 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <h1>フロンタル 予算実績ダッシュボード</h1>
   <div class="subtitle">Budget vs Actual Dashboard — 2026年度</div>
 </header>
-<div class="update-info">最終更新: 2026-06-20<span id="updateDate"></span> ｜ データ取得日: 2026/06/20（DriveDoor最新値）</div>
+<div class="update-info">最終更新: 2026-06-25<span id="updateDate"></span> ｜ データ取得日: 2026/06/25（DriveDoor最新値）</div>
 
 <div class="alert-banner">
-  <strong>⚡ 6/20更新 / 5月一般原価 確定（通行料 計上済）/ 6月はMTDのため月次未反映</strong>
-  5月の交通費（通行料 5,170千円）がDriveDoorに計上され、5月の一般原価・一般粗利が確定（一般売上 57,119／一般原価 44,209／一般粗利 12,910千円）。利用売上 21,399・利用粗利 +1,205千円（5月）。FJSシクロの支払金額が4〜6月で全件0欠落のため外注費（利用原価）は実測不可、手順書に従い確定値を継承（4月19,003／5月20,194）。6月は20日時点のMTD（一般売上 35,519千円）のため月次配列には未反映。確定データは1〜5月。一般売上＝自社配車の請求金額、利用貨物＝本社傭車＋FJSシクロで集計。
+  <strong>⚡ 6/25更新 / 確定データは1〜5月 / 6月はMTDのため月次未反映</strong>
+  5月の一般原価・一般粗利は確定済（一般売上 57,123／一般原価 44,209／一般粗利 12,914千円）。利用売上 21,399・利用粗利 +1,205千円（5月）。FJSシクロの支払金額が4〜6月で全件0欠落のため外注費（利用原価）は実測不可、手順書に従い確定値を継承（4月19,003／5月20,194）。6月は25日時点のMTD（一般売上 45,627／利用売上 18,760千円）のため月次配列には未反映。一般売上＝自社配車の請求金額、利用貨物＝本社傭車＋FJSシクロで集計。
 </div>
 
 <div class="summary-cards" id="summaryCards"></div>
@@ -95,19 +95,19 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <table id="tableCum" class="cum-table"></table>
 </div>
 
-<footer>フロンタル株式会社 ｜ DriveDoor（FJS振替ルール適用済）｜ 自動生成レポート ｜ build 2026-06-19 04:23 JST</footer>
+<footer>フロンタル株式会社 ｜ DriveDoor（FJS振替ルール適用済）｜ 自動生成レポート ｜ build 2026-06-25 JST</footer>
 </div>
 
 <script>
 // ======================================================
-// DATA  2026-06-16更新 FJS振替ルール適用済（外注費=支払金額列実測）
+// DATA  2026-06-25更新 FJS振替ルール適用済（外注費=支払金額列実測／FJS支払欠落分は確定値継承）
 // ======================================================
 const M = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-const CONFIRMED = [0,1,2,3];   // 1〜4月確定
-const PARTIAL   = [4];         // 5月速報
+const CONFIRMED = [0,1,2,3,4];   // 1〜5月確定
+const PARTIAL   = [];           // 速報月なし（6月はMTDのため配列未反映）
 
 // 一般売上 [千円]
-const ippan_sales_act = [42569,43081,53018,61542,57119,null,null,null,null,null,null,null];
+const ippan_sales_act = [42569,43081,53018,61542,57123,null,null,null,null,null,null,null];
 const ippan_sales_bud = [40260,41100,52700,55550,52000,58850,62850,56800,62850,62850,62850,56800];
 
 // 一般原価 [千円]
