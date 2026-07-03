@@ -1,0 +1,9 @@
+data/
+*.xlsx
+reports/
+github_config.sh
+.env
+*token*
+*secret*
+__pycache__/
+*.pyc

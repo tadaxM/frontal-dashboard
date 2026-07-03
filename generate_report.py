@@ -29,7 +29,8 @@ agg = importlib.util.module_from_spec(spec)
 # aggregate.py の main() を書き換えて値を取得できるように import 実行
 # aggregate.py は main() を print するだけなので、必要な関数を直接呼ぶ
 sys.path.insert(0, str(BASE))
-from aggregate import read_nippo, read_sharyo_keihi, round_sen, DATA_DIR
+from aggregate import (read_nippo, read_sharyo_keihi, round_sen, DATA_DIR, OUTBOX_DIR,
+                       resolve_columns, _cell, is_sicro)
 
 # === データ集計 ===
 honsha = read_nippo(DATA_DIR / "nippo_honsha.xlsx", "honsha")
@@ -42,6 +43,80 @@ for data in [honsha, kyoto, fjs]:
     for key in data:
         all_months.update(data[key].keys())
 max_month = max(all_months) if all_months else 3
+
+# ======================================================
+# 確定月レンジの単一情報源（Single Source of Truth）
+#   旧実装は「1〜3月＝確定」を各所にハードコード（confirmed_idx=[0,1,2],
+#   ⑥⑦の r['month'] > 3 等）していたため、4月以降のデータが入ると
+#   売上と原価の対象月がズレて誤集計した。ここで一元管理する。
+#
+#   既定はデータに存在する最終月（max_month）を確定月とする。
+#   ※当月がまだ月中で"未確定"の場合は、下行を最終「完了」月に固定すること。
+#     例) 4月が月中なら:  CONFIRMED_MONTH = 3
+# ======================================================
+CONFIRMED_MONTH = max_month
+
+# --- 当月MTD（月中）除外 ---------------------------------------
+#   週次取得は「最新月＝取得当月の月途中(MTD)」がほぼ常。既存ダッシュボードも
+#   「6月はMTDのため月次未反映」として確定から外している。これに合わせ、
+#   最新月は既定でMTDとして確定から除外する。
+#   ・True （既定）… 最新月をMTDとして確定から除外
+#   ・False … 最新月まで完了済み（月末データ）として確定に含める
+LATEST_MONTH_IS_MTD = True
+if LATEST_MONTH_IS_MTD and max_month > 1:
+    CONFIRMED_MONTH = max_month - 1
+
+CONFIRMED_LABEL = f"1〜{CONFIRMED_MONTH}月確定"
+
+# --- 外注費の確定値継承（手順書／既存ダッシュボード準拠）-----------
+#   FJSシクロの支払(外注費)がDriveDoorに未入力の月は、実測すると外注費が
+#   過少＝利用粗利が過大になる。手順書の運用に従い、確定済みの外注費を
+#   継承して現実的な利用粗利を表示する（単位: 千円）。
+#   ※ここは"維持すべきテーブル"。新たな確定値が出たら追記・更新する。
+#   ※未入力が解消（実測が入る）したら、その月をこの表から外せば実測に戻る。
+INHERIT_CONFIRMED_GAICHU = True
+CONFIRMED_GAICHU = {4: 19003, 5: 20194}  # 出典: 手順書STEP2 / dashboard alert-banner
+
+# ======================================================
+# 暫定注記: 利用計上なのに外注費(支払)が空のレコードを集約し、
+#   欠損がある月のみ成果物へ注記を自動表示する（人手の書き足し不要）。
+#   欠損が解消（支払が入力）されれば注記は自動的に消える。
+# ======================================================
+def _collect_blank(*datasets):
+    agg = {}
+    for d in datasets:
+        for m, b in d.get('_riyo_cost_blank', {}).items():
+            a = agg.setdefault(m, {'count': 0, 'sales': 0})
+            a['count'] += b['count']
+            a['sales'] += b['sales']
+    return agg
+
+BLANK = _collect_blank(honsha, kyoto, fjs)
+BLANK_COUNT = sum(b['count'] for b in BLANK.values())
+BLANK_SALES_K = round(sum(b['sales'] for b in BLANK.values()) / 1000)
+BLANK_MONTHS = ', '.join(f"{m}月" for m in sorted(BLANK)) if BLANK else ''
+
+def provisional_note():
+    """欠損があれば注記文字列を返す。無ければ空文字。"""
+    if not BLANK:
+        return ''
+    inherited = ', '.join(f"{m}月{v:,}" for m, v in sorted(CONFIRMED_GAICHU.items())
+                          if 1 <= m <= CONFIRMED_MONTH) if INHERIT_CONFIRMED_GAICHU else ''
+    base = (f"⚠️ 注記：FJSシクロ等の外注費（支払）が {BLANK_COUNT}件（{BLANK_MONTHS}）"
+            f"DriveDoor未入力です。")
+    if inherited:
+        return base + f"該当月は確定済み外注費を継承した暫定値（{inherited}千円）で表示しています。支払入力の反映後に確定します。"
+    return base + "該当月以降の利用粗利は外注費過少により過大に出るため暫定値です。支払入力の反映後に確定します。"
+
+PROV_NOTE = provisional_note()
+
+def add_prov_note(ws, cell):
+    """指定セルに暫定注記を橙字で表示（欠損時のみ）。"""
+    if not PROV_NOTE:
+        return
+    c = ws[cell]
+    c.value = PROV_NOTE
+    c.font = Font(bold=True, size=10, color="C0392B")
 
 months = list(range(1, 13))
 
@@ -85,6 +160,18 @@ for m in months:
         cost_sharyo_act.append(None)
         cost_jinken_act.append(None)
         cost_hoken_act.append(None)
+
+# 外注費の確定値継承: 未入力月は確定済み外注費で上書き（利用粗利の過大表示を防止）
+if INHERIT_CONFIRMED_GAICHU:
+    for m, gaichu_k in CONFIRMED_GAICHU.items():
+        if 1 <= m <= max_month:
+            riyo_cost_act[m - 1] = gaichu_k
+
+# MTD月（確定月より後）で支払欠損があり継承値も無い月は、利用原価を算出不可(None)とし
+# 利用粗利を"—（未確定）"表示にする（過大なMTD粗利を出さない）。
+for m in BLANK:
+    if m > CONFIRMED_MONTH and m not in CONFIRMED_GAICHU and 1 <= m <= max_month:
+        riyo_cost_act[m - 1] = None
 
 # 費目別原価がすべて0の月はnullに
 for i, m in enumerate(months):
@@ -169,7 +256,7 @@ ws0["A3"] = "単位: 千円"
 ws0["A4"] = f"データソース: DriveDoor（2026/01/01〜{datetime.now().strftime('%Y/%m/%d')}取得）"
 ws0["A5"] = f"CF_FIXED = {CF_FIXED:,}（固定費6,000 + リース7,500 + 金融3,000）"
 
-ws0["A7"] = "■ 累計 KPI（1〜3月確定）"
+ws0["A7"] = f"■ 累計 KPI（{CONFIRMED_LABEL}）"
 ws0["A7"].font = Font(bold=True, size=12, color="1E3A5F")
 
 kpi_headers = ["項目", "予算", "実績", "達成率", "差異"]
@@ -178,7 +265,7 @@ apply_header(ws0, 8, kpi_headers)
 def safe_sum(arr, indices):
     return sum(arr[i] or 0 for i in indices if arr[i] is not None)
 
-confirmed_idx = [0, 1, 2]
+confirmed_idx = list(range(CONFIRMED_MONTH))  # 0始まりindex（確定月まで）
 rows_kpi = [
     ("一般売上", safe_sum(ippan_sales_bud, confirmed_idx), safe_sum(ippan_sales_act, confirmed_idx)),
     ("一般原価", safe_sum(ippan_cost_bud, confirmed_idx), safe_sum(ippan_cost_act, confirmed_idx)),
@@ -355,7 +442,7 @@ set_col_widths(ws4, [8, 12, 12, 12, 12, 12, 12])
 
 # --- ⑤ 累計進捗 ---
 ws5 = wb.create_sheet("⑤累計進捗")
-ws5["A1"] = "⑤ 累計進捗（1〜3月確定）"
+ws5["A1"] = f"⑤ 累計進捗（{CONFIRMED_LABEL}）"
 ws5["A1"].font = Font(bold=True, size=14, color="1E3A5F")
 apply_header(ws5, 3, ["項目", "予算", "実績", "達成率", "差異"])
 rows5 = [
@@ -394,9 +481,10 @@ def read_nippo_detail(filepath, office_type):
     """
     wb = _oxl.load_workbook(filepath, data_only=True)
     ws = wb.active
+    cols = resolve_columns(ws)  # ヘッダー名から列位置を解決
     records = []
     for row in ws.iter_rows(min_row=2, values_only=True):
-        date_val = row[0]
+        date_val = _cell(row, cols['date'])
         if date_val is None:
             continue
         if isinstance(date_val, _dt):
@@ -408,18 +496,20 @@ def read_nippo_detail(filepath, office_type):
                 continue
         else:
             continue
-        haisha = str(row[7]).strip() if len(row) > 7 and row[7] else ''
-        vehicle = str(row[27]).strip() if len(row) > 27 and row[27] else '（未指定）'
-        yosha_name = str(row[40]).strip() if len(row) > 40 and row[40] else ''
-        sales = float(row[89]) if len(row) > 89 and row[89] is not None else 0
-        cost = float(row[100]) if len(row) > 100 and row[100] is not None else 0
+        haisha = str(_cell(row, cols['haisha'])).strip() if _cell(row, cols['haisha']) else ''
+        vehicle = str(_cell(row, cols['vehicle'])).strip() if _cell(row, cols['vehicle']) else '（未指定）'
+        yosha_name = str(_cell(row, cols['yosha'])).strip() if _cell(row, cols['yosha']) else ''
+        _s = _cell(row, cols['sales'])
+        _c = _cell(row, cols['cost'])
+        sales = float(_s) if _s is not None else 0
+        cost = float(_c) if _c is not None else 0
 
         # 拠点判定（FJS振替ルール）
         if office_type == 'fjs':
             if haisha == '自社':
                 office = '京都（FJS自社→振替）'
                 category = 'ippan'
-            elif haisha == '傭車' and 'シクロ' in yosha_name:
+            elif haisha == '傭車' and is_sicro(yosha_name):
                 office = '京都（FJSシクロ→振替）'
                 category = 'riyo'
             else:
@@ -448,8 +538,10 @@ def read_nippo_detail(filepath, office_type):
     return records
 
 
-def read_sharyo_detail(filepath):
+def read_sharyo_detail(filepath, upto_month=None):
     """車両経費CSVから車両別・拠点別の経費合計を返す。
+    upto_month を与えると、発生年月日がその月までの経費のみ集計する
+    （売上側の確定月レンジと揃えるため。旧実装は全月合計を確定分と誤認していた）。
     Returns: dict[(office_base, vehicle_name)] = total_cost (円)
     """
     import csv as _csv
@@ -461,6 +553,14 @@ def read_sharyo_detail(filepath):
         for row in reader:
             himoku = (row.get('車両整備経費区分') or '').strip()
             if himoku not in INCLUDE_CATS:
+                continue
+            # 発生月を取得し、確定月レンジで絞る
+            date_str = (row.get('発生年月日') or '').strip()
+            try:
+                m = _dt.strptime(date_str, "%Y/%m/%d").month
+            except ValueError:
+                continue
+            if upto_month is not None and m > upto_month:
                 continue
             office = (row.get('経費営業所') or '').strip()
             vehicle = (row.get('車両表示名') or '').strip()
@@ -483,16 +583,16 @@ honsha_records = read_nippo_detail(DATA_DIR / "nippo_honsha.xlsx", "honsha")
 kyoto_records = read_nippo_detail(DATA_DIR / "nippo_kyoto.xlsx", "kyoto")
 fjs_records = read_nippo_detail(DATA_DIR / "nippo_fjs.xlsx", "fjs")
 all_records = honsha_records + kyoto_records + fjs_records
-sharyo_vehicle = read_sharyo_detail(DATA_DIR / "sharyokeihi.csv")
+sharyo_vehicle = read_sharyo_detail(DATA_DIR / "sharyokeihi.csv", upto_month=CONFIRMED_MONTH)
 
 
 # ======================================================
 # ⑥ 拠点別粗利
 # ======================================================
 ws6 = wb.create_sheet("⑥拠点別粗利")
-ws6["A1"] = "⑥ 拠点別 売上・原価・粗利（1〜3月確定、単位: 千円）"
+ws6["A1"] = f"⑥ 拠点別 売上・原価・粗利（{CONFIRMED_LABEL}、単位: 千円）"
 ws6["A1"].font = Font(bold=True, size=14, color="1E3A5F")
-ws6["A2"] = "※FJS自社は京都の一般に振替、FJSシクロシュプリームは京都の利用に振替。京都傭車は保留除外。"
+ws6["A2"] = "※FJS自社は京都の一般に振替、FJSシクロシュプリームは京都の利用に振替。京都傭車は保留除外。原価は売上と同じ確定月レンジで集計。"
 ws6["A2"].font = Font(size=9, color="666666")
 
 headers6 = ["拠点", "区分", "売上", "原価", "粗利", "粗利率"]
@@ -501,7 +601,7 @@ apply_header(ws6, 4, headers6)
 # 集計
 office_agg = {}  # key=(office_base, category) value=dict(sales, cost)
 for r in all_records:
-    if r['month'] > 3:  # 1-3月確定分のみ
+    if r['month'] > CONFIRMED_MONTH:  # 確定月分のみ
         continue
     key = (r['office_base'], r['category'])
     d = office_agg.setdefault(key, {'sales': 0, 'cost': 0})
@@ -510,10 +610,9 @@ for r in all_records:
     if r['category'] == 'riyo':
         d['cost'] += r['cost']
 
-# 一般貨物の原価（車両経費CSVから拠点別合計、1-3月分）
-# 注: sharyo_vehicle は累計なので、月次で分けるには read_sharyo_keihi を使うべき
-# ここでは簡易的に 1-3月分が全量として扱う（4月以降のデータが入ってくるまでは問題ない想定）
-# より正確には月別集計が必要。今回は sharyo_vehicle の合計を拠点別に分配
+# 一般貨物の原価（車両経費CSVから拠点別合計）
+# sharyo_vehicle は read_sharyo_detail(upto_month=CONFIRMED_MONTH) で
+# 既に確定月レンジに絞り込み済みのため、売上側と月レンジが揃う。
 honsha_cost_ippan = sum(v for (ob, _), v in sharyo_vehicle.items() if ob == '本社')
 kyoto_cost_ippan = sum(v for (ob, _), v in sharyo_vehicle.items() if ob == '京都')
 # 一般原価を office_agg に反映
@@ -570,7 +669,7 @@ set_col_widths(ws6, [22, 12, 14, 14, 14, 10])
 # ⑦ 車両別粗利（自社車両のみ、拠点ごと降順）
 # ======================================================
 ws7 = wb.create_sheet("⑦車両別粗利")
-ws7["A1"] = "⑦ 車両別 売上・原価・粗利（1〜3月確定、自社車両のみ、単位: 千円）"
+ws7["A1"] = f"⑦ 車両別 売上・原価・粗利（{CONFIRMED_LABEL}、自社車両のみ、単位: 千円）"
 ws7["A1"].font = Font(bold=True, size=14, color="1E3A5F")
 ws7["A2"] = "※売上=請求金額合計（自社便のみ）／原価=車両経費CSVより該当車両合計／粗利=売上−原価。拠点内で粗利降順。"
 ws7["A2"].font = Font(size=9, color="666666")
@@ -583,7 +682,7 @@ vehicle_sales = {}  # (office_base, vehicle) -> sales(円)
 for r in all_records:
     if r['category'] != 'ippan':
         continue
-    if r['month'] > 3:
+    if r['month'] > CONFIRMED_MONTH:
         continue
     key = (r['office_base'], r['vehicle'])
     vehicle_sales[key] = vehicle_sales.get(key, 0) + r['sales']
@@ -656,8 +755,16 @@ set_col_widths(ws7, [10, 28, 14, 14, 14, 10])
 
 
 # --- 保存 ---
+# 暫定注記を各シートへ差し込み（欠損月がある時のみ表示。無ければ何も出ない）
+add_prov_note(ws0, "A6")   # Summary（先頭シート）
+add_prov_note(ws3, "A2")   # ③利用売上・粗利
+add_prov_note(ws5, "A2")   # ⑤累計進捗
+add_prov_note(ws7, "A3")   # ⑦車両別粗利
+if PROV_NOTE:
+    print("[PROVISIONAL] " + PROV_NOTE)
+
 # 出力先: Dropbox の outbox フォルダ
-OUTBOX = Path.home() / "Dropbox" / "kuroda_work" / "outbox"
+OUTBOX = OUTBOX_DIR  # 役割分担: 成果物はDropbox(既定)。FRONTAL_OUTBOXで上書き可
 OUTBOX.mkdir(parents=True, exist_ok=True)
 out_path = OUTBOX / f"frontal_report_{datetime.now().strftime('%Y%m%d')}.xlsx"
 wb.save(out_path)
