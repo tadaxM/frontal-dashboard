@@ -53,11 +53,11 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <h1>フロンタル 予算実績ダッシュボード</h1>
   <div class="subtitle">Budget vs Actual Dashboard — 2026年度</div>
 </header>
-<div class="update-info">最終更新: 2026-07-16<span id="updateDate"></span> ｜ データ取得日: 2026/07/16（運行日〜07/16・DriveDoor最新値）</div>
+<div class="update-info">最終更新: 2026-07-17<span id="updateDate"></span> ｜ データ取得日: 2026/07/17（運行日〜07/17・DriveDoor最新値）</div>
 
 <div class="alert-banner">
-  <strong>⚡ 7/16更新 / 確定（粗利まで）は1〜5月 / 6月は費目別原価が進捗（交通費のみ未入力）→粗利は算出不可継続 / 7月は売上の速報（MTD）</strong>
-  1〜5月は一般・利用とも粗利まで確定（5月：一般売上 57,255／一般原価 44,209／一般粗利 13,046千円、利用売上 21,399・利用粗利 +1,205千円）。6月は一般売上 67,102・利用売上 21,867千円（速報）。DriveDoorの一般原価は燃料14,555・車両4,422・労務25,156・保険1,189千円が入力済だが交通費が未入力（0）、FJSシクロ支払（外注費）も144件未入力のため、6月の一般粗利・利用粗利・CFは「算出不可」表示（速報）。FJS外注費は手順書に従い4月19,003／5月20,194千円を継承。一般売上＝自社配車の請求金額、利用貨物＝本社傭車＋FJSシクロで集計。7月は7/1〜7/16の一般売上 21,224・利用売上 2,558千円を速報（⚡）表示。原価・外注費は未入力のため7月の粗利・CFは算出不可。
+  <strong>⚡ 7/17更新 / 確定（粗利まで）は1〜5月 ＋ 6月は一般粗利まで確定（交通費が入力済に） / 6月の利用粗利のみFJS外注費未入力で算出不可 / 7月は売上の速報（MTD）</strong>
+  1〜5月は一般・利用とも粗利まで確定。6月は一般売上 67,102・一般原価 51,146（燃料14,555・交通5,824・車両4,422・労務25,156・保険1,189）・一般粗利 15,956千円で確定（交通費が新たに入力され原価が揃いました）。利用売上は 21,867千円。ただしFJSシクロ支払（外注費）が144件未入力のため、6月の利用粗利・CFは「算出不可」（過大値は表示しない）。FJS外注費は手順書に従い4月19,003／5月20,194千円を継承。一般売上＝自社配車の請求金額、利用貨物＝本社傭車＋FJSシクロで集計。7月は7/1〜7/17の一般売上 27,365・利用売上 2,779千円を速報（⚡）表示。原価・外注費は未入力のため7月の粗利・CFは算出不可。
 </div>
 
 <div class="summary-cards" id="summaryCards"></div>
@@ -95,23 +95,23 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <table id="tableCum" class="cum-table"></table>
 </div>
 
-<footer>フロンタル株式会社 ｜ DriveDoor（FJS振替ルール適用済）｜ 自動生成レポート ｜ build 2026-07-16 JST</footer>
+<footer>フロンタル株式会社 ｜ DriveDoor（FJS振替ルール適用済）｜ 自動生成レポート ｜ build 2026-07-17 JST</footer>
 </div>
 
 <script>
 // ======================================================
-// DATA  2026-07-15更新 FJS振替ルール適用済（外注費=支払金額列実測／FJS支払欠落分は確定値継承）／6月売上速報・原価未入力／7月=売上速報(MTD)
+// DATA  2026-07-17更新 FJS振替ルール適用済（外注費=支払金額列実測／FJS支払欠落分は確定値継承）／6月=一般粗利確定・利用粗利算出不可／7月=売上速報(MTD)
 // ======================================================
 const M = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 const CONFIRMED = [0,1,2,3,4];   // 1〜5月確定（粗利まで）
-const PARTIAL   = [5,6];         // 6月=売上のみ確定・原価未入力 / 7月=本社売上の速報(MTD)
+const PARTIAL   = [5,6];         // 6月=一般粗利まで確定・利用粗利は算出不可 / 7月=売上の速報(MTD)
 
 // 一般売上 [千円]
-const ippan_sales_act = [42569,43081,53018,61542,57255,67102,21224,null,null,null,null,null];
+const ippan_sales_act = [42569,43081,53018,61542,57255,67102,27365,null,null,null,null,null];
 const ippan_sales_bud = [40260,41100,52700,55550,52000,58850,62850,56800,62850,62850,62850,56800];
 
 // 一般原価 [千円]
-const ippan_cost_act  = [31930,34368,43369,46364,44209,null,null,null,null,null,null,null];
+const ippan_cost_act  = [31930,34368,43369,46364,44209,51146,null,null,null,null,null,null];
 const ippan_cost_bud  = [31055,32419,40040,42303,39457,45086,48168,43105,48168,48168,48168,43105];
 
 // 一般粗利
@@ -119,7 +119,7 @@ const ippan_gross_act = ippan_sales_act.map((s,i)=>s!==null&&ippan_cost_act[i]!=
 const ippan_gross_bud = ippan_sales_bud.map((s,i)=>s-ippan_cost_bud[i]);
 
 // 利用売上・外注費 [千円]
-const riyo_sales_act  = [12187,16036,14049,20336,21399,21867,2558,null,null,null,null,null];
+const riyo_sales_act  = [12187,16036,14049,20336,21399,21867,2779,null,null,null,null,null];
 const riyo_sales_bud  = [16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100,16100];
 const riyo_cost_act   = [11766,14966,12978,19003,20194,null,null,null,null,null,null,null];
 const riyo_cost_bud   = [15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014,15014];
@@ -128,7 +128,7 @@ const riyo_gross_bud  = riyo_sales_bud.map((s,i)=>s-riyo_cost_bud[i]);
 
 // 費目別原価 [千円]
 const cost_nenryo_act = [9039,9844,12450,12786,12623,14555,null,null,null,null,null,null];
-const cost_kotsu_act  = [3952,4132,4852,5472,5170,null,null,null,null,null,null,null];
+const cost_kotsu_act  = [3952,4132,4852,5472,5170,5824,null,null,null,null,null,null];
 const cost_sharyo_act = [1901,4190,3735,4312,2732,4422,null,null,null,null,null,null];
 const cost_jinken_act = [16410,15499,21371,22682,22513,25156,null,null,null,null,null,null];
 const cost_hoken_act  = [628,703,961,1112,1171,1189,null,null,null,null,null,null];
@@ -386,5 +386,5 @@ salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gro
 </script>
 </body>
 </html>
-<!-- build 2026-07-16 JST: 確定1〜5月(粗利まで)+6月売上速報67102/原価未入力(燃料14555速報)+7月MTD速報12592 -->
+<!-- build 2026-07-17 JST: 確定1〜5月+6月一般粗利15956確定(交通5824入力)/6月利用粗利算出不可(FJS外注費未入力)+7月MTD速報27365 -->
 
