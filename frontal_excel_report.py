@@ -21,8 +21,10 @@ BASE = Path(__file__).parent
 # ===== 設定ノブ =====================================================
 CF_FIXED = 16000                      # 見本準拠（固定費+リース+金融）。手順書の16,500ではない
 LATEST_MONTH_IS_MTD = True            # 最新月はMTDとして確定から除外
-INHERIT_CONFIRMED_GAICHU = True
-CONFIRMED_GAICHU = {4: 19003, 5: 20194}   # 出典: 手順書STEP2 / 見本 R8,R9
+# 2026-07-17 クライアント確定：シクロは4月〜「京都日報」ベースで計上（京都請求=売上/京都支払=外注費）。
+# これにより4〜5月のFJS外注費の確定値継承は不要になった（京都側に実支払があるため）。継承は無効化。
+INHERIT_CONFIRMED_GAICHU = False
+CONFIRMED_GAICHU = {}   # 旧: {4:19003,5:20194}。新ルール(4月〜京都計上)で不要
 SOKUHO_MONTHS = set()                 # 速報月（黄背景+⚡）。確定でも実測でもない月を入れる
 
 # ===== 予算配列（千円・12ヶ月）見本から抽出 =========================
@@ -150,9 +152,10 @@ for row in ws["A1:V1"]:
     for cc in row:
         cc.fill = PatternFill("solid", fgColor=NAVY)
 note = f"データ取得日: {datetime.now().strftime('%Y/%m/%d')}\u3000確定=1〜{CONFIRMED_MONTH}月（{CONFIRMED_MONTH+1}月はMTDのため月次未反映）\u3000色: 青=一般 / 紫=利用 / 緑=粗利"
+note += "\u3000シクロ利用計上: 1〜3月=FJS日報 / 4月〜=京都日報（京都請求=売上・京都支払=外注費）"
 if BLANK:
-    inh = ', '.join(f"{m}月{v:,}" for m, v in sorted(CONFIRMED_GAICHU.items()) if 1 <= m <= CONFIRMED_MONTH)
-    note += f"\u3000⚠️FJSシクロ外注費 未入力につき該当月は確定値継承（{inh}千円）"
+    bm = ', '.join(f"{m}月{b['count']}件" for m, b in sorted(BLANK.items()))
+    note += f"\u3000⚠️支払金額(外注費)が空: {bm}（利用粗利が過大の恐れ）"
 ws["A2"] = note; ws["A2"].font = Font(color=GREY, size=9)
 
 hdr(ws, "A3", "月", NAVY, "A3:A4")

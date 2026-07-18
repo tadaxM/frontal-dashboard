@@ -84,6 +84,14 @@ def _cell(row, idx):
 #   ※ "SICURO" は "SICRO" を含まないため、部分一致1本では取りこぼす。
 _SICRO_PATTERNS = ('シクロ', 'SICRO', 'SICURO')
 
+# ===== シクロ運送 利用計上の切替月（クライアント確定 2026-07-17）=====
+#   シクロ運送は京都のスキームだが、商流上いったんFJSを経由する（京都→FJS→シクロ）。
+#   このため請求と支払が2日報に分かれて記録され、期によって計上元を変える：
+#     1〜3月（<SICRO_SWITCH_MONTH）= 従来どおり FJS 側で計上（FJS請求=売上, FJS支払=外注費）
+#     4月〜 （>=SICRO_SWITCH_MONTH）= 京都 側で計上（京都請求=売上, 京都支払=外注費）
+#                                    ※FJS側のシクロは二重計上防止のため除外
+SICRO_SWITCH_MONTH = 4
+
 
 def is_sicro(yosha_name):
     if not yosha_name:
@@ -97,8 +105,10 @@ def read_nippo(filepath, office_type):
     日報Excelを読み取り、月別・区分別に売上・原価を集計する。
     office_type: 'honsha', 'kyoto', 'fjs'
 
-    本社・京都: 配車先区分(Col H)が「自社」→ 一般(ippan)、「傭車」→ 利用(riyo)
-    FJS: すべて利用(riyo)に分類
+    本社: 配車先区分(Col H)が「自社」→ 一般(ippan)、「傭車」→ 利用(riyo)
+    FJS: 自社 → 一般。傭車かつシクロは【1〜3月のみ】利用(riyo)。4月〜のシクロは京都で計上するため除外。
+    京都: 自社 → 一般。傭車は原則保留(除外)だが、【4月〜のシクロ傭車】のみ利用(riyo)に計上
+          （京都請求=売上, 京都支払=外注費）。切替は SICRO_SWITCH_MONTH。
     """
     wb = openpyxl.load_workbook(filepath, data_only=True)
     ws = wb.active
@@ -128,23 +138,28 @@ def read_nippo(filepath, office_type):
         haisha_raw = _cell(row, cols['haisha'])
         haisha = str(haisha_raw).strip() if haisha_raw else ''
         if office_type == 'fjs':
-            # FJS: 自社 → 一般(京都に加算)
-            # 傭車で傭車先=シクロシュプリーム → 利用(京都に加算)
+            # FJS: 自社 → 一般
+            # 傭車かつシクロ → 【1〜3月のみ】利用。4月〜は京都で計上するため除外(二重計上防止)
             # その他傭車 → 除外(フロンタルに関係ない)
             yosha_raw = _cell(row, cols['yosha'])
             yosha_name = str(yosha_raw).strip() if yosha_raw else ''
             if haisha == '自社':
                 category = 'ippan'
-            elif haisha == '傭車' and is_sicro(yosha_name):
+            elif haisha == '傭車' and is_sicro(yosha_name) and month < SICRO_SWITCH_MONTH:
                 category = 'riyo'
             else:
-                continue  # フロンタルに関係ない傭車は除外
+                continue
         elif office_type == 'kyoto':
-            # 京都: 自社 → 一般、傭車 → 保留(除外)
+            # 京都: 自社 → 一般。傭車は原則保留(除外)。
+            # ただし【4月〜のシクロ傭車】のみ利用に計上(京都請求=売上, 京都支払=外注費)
+            yosha_raw = _cell(row, cols['yosha'])
+            yosha_name = str(yosha_raw).strip() if yosha_raw else ''
             if haisha == '自社':
                 category = 'ippan'
+            elif haisha == '傭車' and is_sicro(yosha_name) and month >= SICRO_SWITCH_MONTH:
+                category = 'riyo'
             else:
-                continue  # 京都の傭車は保留
+                continue  # 京都の傭車（3月以前のシクロ・非シクロ）は保留
         else:
             # 本社: 配車先区分で判定
             if haisha == '傭車':
