@@ -68,6 +68,11 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
 <div class="summary-cards" id="summaryCards"></div>
 
 <div class="section">
+  <h2>売上計（一般＋利用）予算 vs 実績</h2>
+  <div class="chart-outer"><div class="chart-scroll"><canvas id="chartTotalSales"></canvas></div></div>
+</div>
+
+<div class="section">
   <h2>① 一般売上・粗利</h2>
   <div class="chart-outer"><div class="chart-scroll"><canvas id="chartIppan"></canvas></div></div>
   <div class="table-outer"><table id="tableIppan"></table></div>
@@ -199,6 +204,30 @@ function salesChart(id, salesAct, salesBud, grossAct, grossBud, colorAct, colorB
 }
 salesChart('chartIppan',ippan_sales_act,ippan_sales_bud,ippan_gross_act,ippan_gross_bud,'rgba(37,99,235,.8)','rgba(37,99,235,.25)');
 salesChart('chartRiyo', riyo_sales_act, riyo_sales_bud, riyo_gross_act, riyo_gross_bud,'rgba(16,185,129,.8)','rgba(16,185,129,.25)');
+
+// ======================================================
+// CHART: 売上計（一般＋利用）予算 vs 実績（松本指定 2026-07-25・差異/達成率なし）
+// ======================================================
+(()=>{
+  const totAct = M.map((_,i)=>(ippan_sales_act[i]===null&&riyo_sales_act[i]===null)?null
+                              :(ippan_sales_act[i]??0)+(riyo_sales_act[i]??0));
+  const totBud = M.map((_,i)=>ippan_sales_bud[i]+riyo_sales_bud[i]);
+  new Chart(document.getElementById('chartTotalSales'),{
+    type:'bar',
+    data:{labels:M,datasets:[
+      {label:'予算',data:totBud,backgroundColor:'rgba(30,58,95,.25)'},
+      {label:'実績',data:totAct.map(v=>v??0),
+       backgroundColor:totAct.map((v,i)=>PARTIAL.includes(i)?'rgba(251,191,36,.7)':'rgba(30,58,95,.8)')},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{
+        x:{ticks:{font:{size:11}}},
+        y:{ticks:{callback:v=>(v/1000).toFixed(0)+'M',font:{size:11}},grid:{color:'rgba(0,0,0,.05)'}}
+      }
+    }
+  });
+})();
 
 // ======================================================
 // CHART: 費目別原価 積み上げ棒(予算/実績)+実績合計折れ線
