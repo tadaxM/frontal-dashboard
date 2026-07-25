@@ -153,13 +153,18 @@ const confirmedLabel = `1〜${CONFIRMED.length}月`;
 // ======================================================
 (()=>{
   const c = CONFIRMED;
+  // 売上3カード（松本指定 2026-07-25: 売上計/一般/利用の予算・実績のみ。差異・達成率は表示しない）
   const iActSum = sumIdx(ippan_sales_act,c), iBudSum = sumIdx(ippan_sales_bud,c);
+  const rActSum = sumIdx(riyo_sales_act,c),  rBudSum = sumIdx(riyo_sales_bud,c);
+  const tActSum = iActSum+rActSum,           tBudSum = iBudSum+rBudSum;
   const igActSum= sumIdx(ippan_gross_act,c), igBudSum= sumIdx(ippan_gross_bud,c);
   const rgActSum= sumIdx(riyo_gross_act,c),  rgBudSum= sumIdx(riyo_gross_bud,c);
   const gActSum = igActSum+rgActSum, gBudSum = igBudSum+rgBudSum;
-  const ir=rate(iActSum,iBudSum), igr=rate(igActSum,igBudSum), rgr=rate(rgActSum,rgBudSum), gr=rate(gActSum,gBudSum);
+  const igr=rate(igActSum,igBudSum), rgr=rate(rgActSum,rgBudSum), gr=rate(gActSum,gBudSum);
   const cards=[
-    {label:`一般売上 累計 (${confirmedLabel})`,value:fmtK(iActSum),sub:`予算比 ${ir}%（予算 ${fmtK(iBudSum)}）`,color:ir>=100?'green':'orange'},
+    {label:`売上計（一般＋利用）累計 (${confirmedLabel})`,value:fmtK(tActSum),sub:`予算 ${fmtK(tBudSum)}`,color:''},
+    {label:`一般貨物売上 累計 (${confirmedLabel})`,value:fmtK(iActSum),sub:`予算 ${fmtK(iBudSum)}`,color:''},
+    {label:`利用貨物売上 累計 (${confirmedLabel})`,value:fmtK(rActSum),sub:`予算 ${fmtK(rBudSum)}`,color:''},
     {label:`一般粗利 累計 (${confirmedLabel})`,value:fmtK(igActSum),sub:`予算比 ${igr}%（予算 ${fmtK(igBudSum)}）`,color:igr>=100?'green':'orange'},
     {label:`利用粗利 累計 (${confirmedLabel})`,value:fmtK(rgActSum),sub:`予算比 ${rgr}%（予算 ${fmtK(rgBudSum)}）`,color:rgr>=100?'green':'red'},
     {label:`粗利合計 累計 (${confirmedLabel})`,value:fmtK(gActSum),sub:`予算比 ${gr}%（予算 ${fmtK(gBudSum)}）`,color:gr>=100?'green':'orange'},
