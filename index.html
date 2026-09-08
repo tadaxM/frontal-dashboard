@@ -95,7 +95,7 @@ footer{text-align:center;padding:16px 0;color:#9ca3af;font-size:.75rem;border-to
   <h2>④ キャッシュフロー（概算）</h2>
   <div class="cf-box">
     <strong>キャッシュアウト見込み（月別）＝ 金融機関返済（利息込） 2,984〜3,537 + 車両リース 6,014〜10,328 + 固定費 7,050 ＝ 月16,068〜20,885千円</strong>（2026-09-09改定：固定費定数17,600→月別見込みに変更）<br>
-    月次CF = 一般粗利 + 利用粗利 − 当月キャッシュアウト見込み
+    簡易CF = 一般粗利 + 利用粗利 − 当月キャッシュアウト見込み
   </div>
   <div class="chart-outer"><div class="chart-scroll"><canvas id="chartCF"></canvas></div></div>
   <div class="table-outer"><table id="tableCF"></table></div>
@@ -266,12 +266,10 @@ const COST_CATS=[
 // ======================================================
 (()=>{
   const cf = cf_act; // サーバ側で null ガード済み（null+null===0 の現行バグは継承しない）
-  const cfBud=M.map((_,i)=>ippan_gross_bud[i]+riyo_gross_bud[i]-CF_OUT[i]);
   new Chart(document.getElementById('chartCF'),{
     type:'bar',
     data:{labels:M,datasets:[
-      {label:'CF 予算',data:cfBud,backgroundColor:'rgba(37,99,235,.25)'},
-      {label:'CF 実績',data:cf,backgroundColor:cf.map(v=>v===null?'rgba(209,213,219,.3)':v>=0?'rgba(16,185,129,.75)':'rgba(239,68,68,.75)')},
+      {label:'簡易CF',data:cf,backgroundColor:cf.map(v=>v===null?'rgba(209,213,219,.3)':v>=0?'rgba(16,185,129,.75)':'rgba(239,68,68,.75)')},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'top'}},
@@ -357,15 +355,13 @@ const COST_CATS=[
 // TABLE: CF
 // ======================================================
 (()=>{
-  let h=`<thead><tr><th>月</th><th>一般粗利</th><th>利用粗利</th><th>粗利合計</th><th>キャッシュアウト見込み</th><th>CF 予算</th><th>CF 実績</th></tr></thead><tbody>`;
+  let h=`<thead><tr><th>月</th><th>一般粗利</th><th>利用粗利</th><th>粗利合計</th><th>キャッシュアウト見込み</th><th>簡易CF</th></tr></thead><tbody>`;
   M.forEach((m,i)=>{
     const ig=ippan_gross_act[i],rg=riyo_gross_act[i];
     const g=ig!==null&&rg!==null?ig+rg:null;
     const cf=cf_act[i];
-    const cfb=ippan_gross_bud[i]+riyo_gross_bud[i]-CF_OUT[i];
     h+=`<tr><td>${m}</td><td>${fmt(ig)}</td><td>${fmt(rg)}</td>
     <td>${fmt(g)}</td><td>${fmt(-CF_OUT[i])}</td>
-    <td class="${cfb>=0?'':'negative'}">${fmt(cfb)}</td>
     <td class="${cf===null?'neutral':cf>=0?'positive':'negative'}">${fmt(cf)}</td></tr>`;
   });
   document.getElementById('tableCF').innerHTML=h+'</tbody>';
